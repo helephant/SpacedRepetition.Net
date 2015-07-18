@@ -9,17 +9,6 @@ namespace SpacedRepetition.Net.Tests.Unit
         private readonly ClockStub _clock = new ClockStub(DateTime.Now);
 
         [Test]
-        public void Test()
-        {
-            var item = new SpacedRepetitionItem();
-            var strategy = new SuperMemo2SrsStrategy();
-            var set = new SpacedRepetitionSet<SpacedRepetitionItem>(new[] { item }, strategy);
-
-            var next = set.Next();
-            Assert.That(next, Is.EqualTo(item));
-        }
-
-        [Test]
         public void ItemsThatHaveNeverBeenReviewedAreDueImmediately()
         {
             var item = new SrsItemBuilder().NeverReviewed().Build();
@@ -40,27 +29,35 @@ namespace SpacedRepetition.Net.Tests.Unit
 
             Assert.That(nextReview, Is.EqualTo(_clock.Now().AddDays(6)));
         }
-    }
 
-    public class SuperMemo2SrsStrategy : IIntervalStrategy
-    {
-        private readonly IClock _clock;
-
-        public SuperMemo2SrsStrategy() : this(new Clock())
+        [Test]
+        public void ShortIntervalForCardWithLowTimesReviewedAndLowEasinessFactor()
         {
+            var easinessFactor = 1.3;
+            var timesReviewed = 3;
+            var lastReviewDate = _clock.Now().AddDays(-2);
+            var item = new SrsItemBuilder().WithLastReviewDate(lastReviewDate).WithEasinessFactor(easinessFactor).WithTimesReviewed(timesReviewed).Build();
+            var strategy = new SuperMemo2SrsStrategy(_clock);
+
+            var nextReview = strategy.NextReview(item);
+
+            var expectedInterval = lastReviewDate.AddDays((timesReviewed - 1) * easinessFactor);
+            Assert.That(nextReview, Is.EqualTo(expectedInterval));
         }
 
-        public SuperMemo2SrsStrategy(IClock clock)
+        [Test]
+        public void LongIntervalForCardWithHighTimesReviewedAndHighEasinessFactor()
         {
-            _clock = clock;
-        }
+            var easinessFactor = 2.5;
+            var timesReviewed = 30;
+            var lastReviewDate = _clock.Now().AddDays(-2);
+            var item = new SrsItemBuilder().WithLastReviewDate(lastReviewDate).WithEasinessFactor(easinessFactor).WithTimesReviewed(timesReviewed).Build();
+            var strategy = new SuperMemo2SrsStrategy(_clock);
 
-        public DateTime NextReview(ISpacedRepetitionItem item)
-        {
-            if(item.TimesReviewed == 0)
-                return _clock.Now();
+            var nextReview = strategy.NextReview(item);
 
-            return _clock.Now().AddDays(6);
+            var expectedInterval = lastReviewDate.AddDays((timesReviewed - 1) * easinessFactor);
+            Assert.That(nextReview, Is.EqualTo(expectedInterval));
         }
     }
 }

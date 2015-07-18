@@ -4,33 +4,43 @@ namespace SpacedRepetition.Net.Tests.Unit
 {
     public class SrsItemBuilder
     {
-        private readonly SpacedRepetitionItem item = new SpacedRepetitionItem()
+        private readonly SpacedRepetitionItem _item = new SpacedRepetitionItem()
         {
-            TimesReviewed = 3,
-            LastReviewDate = DateTime.Now.AddDays(-3)
+            Streak = 3,
+            LastReviewDate = DateTime.Now.AddDays(-3),
+            EasinessFactor = 2
+            
         };
 
         public SrsItemBuilder NeverReviewed()
         {
-            item.TimesReviewed = 0;
+            _item.Streak = 0;
+            _item.EasinessFactor = 2.5;
             return this;
         }
 
         public SrsItemBuilder WithTimesReviewed(int timesReviewed)
         {
-            item.TimesReviewed = timesReviewed;
+            _item.Streak = timesReviewed;
             return this;
         }
 
         public SrsItemBuilder WithLastReviewDate(DateTime lastReviewDate)
         {
-            item.LastReviewDate = lastReviewDate;
+            _item.LastReviewDate = lastReviewDate;
             return this;
         }
 
+        public SrsItemBuilder WithEasinessFactor(double easinessFactor)
+        {
+            _item.EasinessFactor = easinessFactor;
+            return this;
+        }
+
+
         public SpacedRepetitionItem Build()
         {
-            return item;
+            return _item;
         }
     }
 }

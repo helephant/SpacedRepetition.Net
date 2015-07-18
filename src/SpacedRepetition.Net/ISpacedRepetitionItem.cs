@@ -4,7 +4,8 @@ namespace SpacedRepetition.Net
 {
     public interface ISpacedRepetitionItem
     {
-        int TimesReviewed { get; set; }
+        int Streak { get; set; }
         DateTime LastReviewDate { get; set; }
+        double EasinessFactor { get; set; }
     }
 }
