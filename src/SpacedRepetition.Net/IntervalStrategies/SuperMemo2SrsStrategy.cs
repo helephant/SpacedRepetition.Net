@@ -24,9 +24,16 @@ namespace SpacedRepetition.Net.IntervalStrategies
             if(item.CorrectReviewStreak == 0)
                 return now;
             if(item.CorrectReviewStreak == 1)
-                return now.AddDays(6);
+                return item.LastReviewDate.AddDays(6);
 
-            return item.LastReviewDate.AddDays((item.CorrectReviewStreak - 1)*item.EasinessFactor);
+            var easinessFactor = CalculateEasinessFactor(item.DifficultyRating.Percentage);
+            return item.LastReviewDate.AddDays((item.CorrectReviewStreak - 1)*easinessFactor);
+        }
+
+        private double CalculateEasinessFactor(int difficultyRating)
+        {
+            // using a linear equation
+            return (-0.012 * difficultyRating) + 2.5;
         }
     }
 }

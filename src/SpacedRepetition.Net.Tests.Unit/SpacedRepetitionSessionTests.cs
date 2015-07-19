@@ -18,6 +18,19 @@ namespace SpacedRepetition.Net.Tests.Unit
         }
 
         [Test]
+        public void only_return_due_items()
+        {
+            var dueItems = 2;
+            var items = new SrsItemListBuilder()
+                            .WithDueItems(dueItems)
+                            .WithFutureItems(3)
+                            .Build();
+            var session = new SpacedRepetitionSession<SpacedRepetitionItem>(items);
+
+            Assert.That(session.Count(), Is.EqualTo(dueItems));
+        }
+
+        [Test]
         public void limit_new_cards_per_session()
         {
             var items = new SrsItemListBuilder().WithNewItems(_maxNewCardsPerSession + 1).Build();
@@ -31,7 +44,7 @@ namespace SpacedRepetition.Net.Tests.Unit
         {
             var items = new SrsItemListBuilder()
                 .WithNewItems(_maxNewCardsPerSession - 1)
-                .WithItemsWaitingReview(1)
+                .WithExistingItems(1)
                 .WithNewItems(2)
                 .Build();
 
@@ -43,7 +56,7 @@ namespace SpacedRepetition.Net.Tests.Unit
         [Test]
         public void limit_existing_cards_per_session()
         {
-            var items = new SrsItemListBuilder().WithItemsWaitingReview(_maxExistingCardsPerSession + 1).Build();
+            var items = new SrsItemListBuilder().WithExistingItems(_maxExistingCardsPerSession + 1).Build();
             var session = new SpacedRepetitionSession<SpacedRepetitionItem>(items) { MaxExistingCards = _maxExistingCardsPerSession };
 
             Assert.That(session.Count(), Is.EqualTo(_maxExistingCardsPerSession));
@@ -53,9 +66,9 @@ namespace SpacedRepetition.Net.Tests.Unit
         public void limit_existing_cards_when_there_are_also_new_cards()
         {
             var items = new SrsItemListBuilder()
-                               .WithItemsWaitingReview(_maxExistingCardsPerSession - 1)
+                               .WithExistingItems(_maxExistingCardsPerSession - 1)
                                .WithNewItems(1)
-                               .WithItemsWaitingReview(2)
+                               .WithExistingItems(2)
                                .Build();
 
             var session = new SpacedRepetitionSession<SpacedRepetitionItem>(items) { MaxExistingCards = _maxExistingCardsPerSession};

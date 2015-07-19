@@ -6,13 +6,13 @@ namespace SpacedRepetition.Net
     {
         public int CorrectReviewStreak { get; set; }
         public DateTime LastReviewDate { get; set; }
-        public double EasinessFactor { get; set; }
+        public DifficultyRating DifficultyRating { get; set; }
 
         public SpacedRepetitionItem Clone()
         {
             return new SpacedRepetitionItem
             {
-                EasinessFactor = EasinessFactor,
+                DifficultyRating = DifficultyRating,
                 LastReviewDate = LastReviewDate,
                 CorrectReviewStreak = CorrectReviewStreak
             };

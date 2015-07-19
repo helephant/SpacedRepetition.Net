@@ -40,6 +40,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Clock.cs" />
+    <Compile Include="DifficultyRating.cs" />
     <Compile Include="IClock.cs" />
     <Compile Include="IntervalStrategies\SuperMemo2SrsStrategy.cs" />
     <Compile Include="ISpacedRepetitionItem.cs" />

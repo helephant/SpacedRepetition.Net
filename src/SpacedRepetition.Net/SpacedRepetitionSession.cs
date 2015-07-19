@@ -31,20 +31,21 @@ namespace SpacedRepetition.Net
         {
             while (_enumerator.MoveNext())
             {
-                var nextReview = Strategy.NextReview(_enumerator.Current);
-                if (nextReview >= DateTime.Now)
+                var item = _enumerator.Current;
+                var nextReview = Strategy.NextReview(item);
+                if (nextReview <= DateTime.Now)
                 {
-                    if (_enumerator.Current.IsNewItem)
+                    if (item.IsNewItem)
                     {
                         _newCardsReturned++;
                         if (_newCardsReturned <= MaxNewCards)
-                            yield return _enumerator.Current;
+                            yield return item;
                     }
                     else
                     {
                         _existingCardsReturned++;
                         if (_existingCardsReturned <= MaxExistingCards)
-                            yield return _enumerator.Current;
+                            yield return item;
                     }
                 }
             }

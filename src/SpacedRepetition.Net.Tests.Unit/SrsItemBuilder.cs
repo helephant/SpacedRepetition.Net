@@ -5,19 +5,21 @@ namespace SpacedRepetition.Net.Tests.Unit
 {
     public class SrsItemBuilder
     {
-        private readonly SpacedRepetitionItem _item = new SpacedRepetitionItem()
-        {
-            CorrectReviewStreak = 3,
-            LastReviewDate = DateTime.Now.AddDays(-3),
-            EasinessFactor = 2
-            
-        };
+        private readonly SpacedRepetitionItem _item = new SpacedRepetitionItem();
 
         public SrsItemBuilder NeverReviewed()
         {
             _item.CorrectReviewStreak = 0;
             _item.LastReviewDate = DateTime.MinValue;
-            _item.EasinessFactor = 2.5;
+            _item.DifficultyRating = DifficultyRating.Easiest;
+            return this;
+        }
+
+        public SrsItemBuilder Due()
+        {
+            _item.CorrectReviewStreak = 3;
+            _item.LastReviewDate = DateTime.Now.AddDays(-100);
+            _item.DifficultyRating = DifficultyRating.MostDifficult;
             return this;
         }
 
@@ -33,12 +35,17 @@ namespace SpacedRepetition.Net.Tests.Unit
             return this;
         }
 
-        public SrsItemBuilder WithEasinessFactor(double easinessFactor)
+        public SrsItemBuilder WithDifficultyRating(int difficultyPercentage)
         {
-            _item.EasinessFactor = easinessFactor;
+            _item.DifficultyRating = new DifficultyRating(difficultyPercentage);
             return this;
         }
 
+        public SrsItemBuilder WithDifficultyRating(DifficultyRating difficulty)
+        {
+            _item.DifficultyRating = difficulty;
+            return this;
+        }
 
         public SpacedRepetitionItem Build()
         {
@@ -50,29 +57,10 @@ namespace SpacedRepetition.Net.Tests.Unit
             for (var x = 0; x < count; x++)
                 yield return _item.Clone();
         }
-    }
 
-    public class SrsItemListBuilder
-    {
-        private List<SpacedRepetitionItem>  _items = new List<SpacedRepetitionItem>();
-
-        public SrsItemListBuilder WithNewItems(int count)
+        public static implicit operator SpacedRepetitionItem(SrsItemBuilder builder)
         {
-            var newItems = new SrsItemBuilder().NeverReviewed().Build(count);
-            _items.AddRange(newItems);
-            return this;
+            return builder.Build();
         }
-
-        public SrsItemListBuilder WithItemsWaitingReview(int count)
-        {
-            var existingItems = new SrsItemBuilder().Build(count);
-            _items.AddRange(existingItems);
-            return this;
-        }
-
-        public IEnumerable<SpacedRepetitionItem> Build()
-        {
-            return _items;
-        } 
     }
 }

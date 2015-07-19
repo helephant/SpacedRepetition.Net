@@ -15,7 +15,7 @@ namespace SpacedRepetition.Net.Tests.Unit
         [Test]
         public void IsExistingItem()
         {
-            var item = new SrsItemBuilder().Build();
+            var item = new SrsItemBuilder().Due().Build();
 
             Assert.That(item.IsNewItem, Is.False);
         }
