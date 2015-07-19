@@ -12,23 +12,18 @@ namespace SpacedRepetition.Net.Tests.Unit
         public void load_next_item()
         {
             var item = new SrsItemBuilder().Build();
-            var set = new SpacedRepetitionSession<SpacedRepetitionItem>(new[] { item });
+            var session = new SpacedRepetitionSession<SpacedRepetitionItem>(new[] { item });
 
-            var next = set.Next();
-            Assert.That(next, Is.EqualTo(item));
+            Assert.That(session.First(), Is.EqualTo(item));
         }
 
         [Test]
         public void limit_new_cards_per_session()
         {
             var items = new SrsItemListBuilder().WithNewItems(_maxNewCardsPerSession + 1).Build();
-            var set = new SpacedRepetitionSession<SpacedRepetitionItem>(items) { MaxNewCards = _maxNewCardsPerSession };
+            var session = new SpacedRepetitionSession<SpacedRepetitionItem>(items) { MaxNewCards = _maxNewCardsPerSession };
 
-            var newCards = 0;
-            while (set.Next() != null)
-                newCards++; 
-
-            Assert.That(newCards, Is.EqualTo(_maxNewCardsPerSession));
+            Assert.That(session.Count(), Is.EqualTo(_maxNewCardsPerSession));
         }
 
         [Test]
@@ -36,34 +31,22 @@ namespace SpacedRepetition.Net.Tests.Unit
         {
             var items = new SrsItemListBuilder()
                 .WithNewItems(_maxNewCardsPerSession - 1)
-                .WithItemsWaitingReview(_maxExistingCardsPerSession + 1)
+                .WithItemsWaitingReview(1)
                 .WithNewItems(2)
                 .Build();
 
-            var set = new SpacedRepetitionSession<SpacedRepetitionItem>(items) { MaxNewCards = _maxNewCardsPerSession };
+            var session = new SpacedRepetitionSession<SpacedRepetitionItem>(items) { MaxNewCards = _maxNewCardsPerSession };
 
-            var newCards = 0;
-            SpacedRepetitionItem item;
-            while ((item = set.Next()) != null)
-            {
-                if (item.IsNewItem)
-                    newCards++;
-            }
-
-            Assert.That(newCards, Is.EqualTo(_maxNewCardsPerSession));
+            Assert.That(session.Count(x => x.IsNewItem), Is.EqualTo(_maxNewCardsPerSession));
         }
 
         [Test]
         public void limit_existing_cards_per_session()
         {
             var items = new SrsItemListBuilder().WithItemsWaitingReview(_maxExistingCardsPerSession + 1).Build();
-            var set = new SpacedRepetitionSession<SpacedRepetitionItem>(items) { MaxExistingCards = _maxExistingCardsPerSession };
+            var session = new SpacedRepetitionSession<SpacedRepetitionItem>(items) { MaxExistingCards = _maxExistingCardsPerSession };
 
-            var existingCards = 0;
-            while (set.Next() != null)
-                    existingCards++;
-
-            Assert.That(existingCards, Is.EqualTo(_maxExistingCardsPerSession));
+            Assert.That(session.Count(), Is.EqualTo(_maxExistingCardsPerSession));
         }
 
         [Test]
@@ -71,21 +54,13 @@ namespace SpacedRepetition.Net.Tests.Unit
         {
             var items = new SrsItemListBuilder()
                                .WithItemsWaitingReview(_maxExistingCardsPerSession - 1)
-                               .WithNewItems(_maxNewCardsPerSession + 1)
+                               .WithNewItems(1)
                                .WithItemsWaitingReview(2)
                                .Build();
 
-            var set = new SpacedRepetitionSession<SpacedRepetitionItem>(items) { MaxExistingCards = _maxExistingCardsPerSession};
+            var session = new SpacedRepetitionSession<SpacedRepetitionItem>(items) { MaxExistingCards = _maxExistingCardsPerSession};
 
-            var existingCards = 0;
-            SpacedRepetitionItem item;
-            while ((item = set.Next()) != null)
-            {
-                if (!item.IsNewItem)
-                    existingCards++;
-            }
-
-            Assert.That(existingCards, Is.EqualTo(_maxExistingCardsPerSession));
+            Assert.That(session.Count(x => !x.IsNewItem), Is.EqualTo(_maxExistingCardsPerSession));
         }
     }
 }

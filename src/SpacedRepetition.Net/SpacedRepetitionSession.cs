@@ -1,10 +1,11 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using SpacedRepetition.Net.IntervalStrategies;
 
 namespace SpacedRepetition.Net
 {
-    public class SpacedRepetitionSession<T> 
+    public class SpacedRepetitionSession<T>  : IEnumerable<T> 
         where T : ISpacedRepetitionItem
     {
         private readonly IEnumerator<T> _enumerator;
@@ -26,7 +27,7 @@ namespace SpacedRepetition.Net
             MaxExistingCards = 100;
         }
 
-        public T Next()
+        public IEnumerator<T> GetEnumerator()
         {
             while (_enumerator.MoveNext())
             {
@@ -37,19 +38,21 @@ namespace SpacedRepetition.Net
                     {
                         _newCardsReturned++;
                         if (_newCardsReturned <= MaxNewCards)
-                            return _enumerator.Current;
+                            yield return _enumerator.Current;
                     }
                     else
                     {
                         _existingCardsReturned++;
                         if (_existingCardsReturned <= MaxExistingCards)
-                            return _enumerator.Current;
+                            yield return _enumerator.Current;
                     }
                 }
             }
-
-            return default(T);
         }
- 
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return GetEnumerator();
+        }
     }
 }
