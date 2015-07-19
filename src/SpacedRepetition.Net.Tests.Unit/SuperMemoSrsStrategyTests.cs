@@ -9,7 +9,7 @@ namespace SpacedRepetition.Net.Tests.Unit
         private readonly ClockStub _clock = new ClockStub(DateTime.Now);
 
         [Test]
-        public void ItemsThatHaveNeverBeenReviewedAreDueImmediately()
+        public void ItemsWithNoCorrectReviewAreDueImmediately()
         {
             var item = new SrsItemBuilder().NeverReviewed().Build();
             var strategy = new SuperMemo2SrsStrategy(_clock);
@@ -20,9 +20,9 @@ namespace SpacedRepetition.Net.Tests.Unit
         }
 
         [Test]
-        public void ItemsThatHaveBeenReviewedOnceAreDueInSixDaysFromFirstReview()
+        public void ItemsThatHaveBeenReviewedCorrectlyOnceAreDueInSixDaysFromFirstReview()
         {
-            var item = new SrsItemBuilder().WithLastReviewDate(_clock.Now()).WithTimesReviewed(1).Build();
+            var item = new SrsItemBuilder().WithLastReviewDate(_clock.Now()).WithCorrectReviewStreak(1).Build();
             var strategy = new SuperMemo2SrsStrategy(_clock);
 
             var nextReview = strategy.NextReview(item);
@@ -36,7 +36,7 @@ namespace SpacedRepetition.Net.Tests.Unit
             var easinessFactor = 1.3;
             var timesReviewed = 3;
             var lastReviewDate = _clock.Now().AddDays(-2);
-            var item = new SrsItemBuilder().WithLastReviewDate(lastReviewDate).WithEasinessFactor(easinessFactor).WithTimesReviewed(timesReviewed).Build();
+            var item = new SrsItemBuilder().WithLastReviewDate(lastReviewDate).WithEasinessFactor(easinessFactor).WithCorrectReviewStreak(timesReviewed).Build();
             var strategy = new SuperMemo2SrsStrategy(_clock);
 
             var nextReview = strategy.NextReview(item);
@@ -51,7 +51,7 @@ namespace SpacedRepetition.Net.Tests.Unit
             var easinessFactor = 2.5;
             var timesReviewed = 30;
             var lastReviewDate = _clock.Now().AddDays(-2);
-            var item = new SrsItemBuilder().WithLastReviewDate(lastReviewDate).WithEasinessFactor(easinessFactor).WithTimesReviewed(timesReviewed).Build();
+            var item = new SrsItemBuilder().WithLastReviewDate(lastReviewDate).WithEasinessFactor(easinessFactor).WithCorrectReviewStreak(timesReviewed).Build();
             var strategy = new SuperMemo2SrsStrategy(_clock);
 
             var nextReview = strategy.NextReview(item);

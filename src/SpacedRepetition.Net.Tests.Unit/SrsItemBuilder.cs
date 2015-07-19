@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace SpacedRepetition.Net.Tests.Unit
 {
@@ -6,7 +7,7 @@ namespace SpacedRepetition.Net.Tests.Unit
     {
         private readonly SpacedRepetitionItem _item = new SpacedRepetitionItem()
         {
-            Streak = 3,
+            CorrectReviewStreak = 3,
             LastReviewDate = DateTime.Now.AddDays(-3),
             EasinessFactor = 2
             
@@ -14,14 +15,15 @@ namespace SpacedRepetition.Net.Tests.Unit
 
         public SrsItemBuilder NeverReviewed()
         {
-            _item.Streak = 0;
+            _item.CorrectReviewStreak = 0;
+            _item.LastReviewDate = DateTime.MinValue;
             _item.EasinessFactor = 2.5;
             return this;
         }
 
-        public SrsItemBuilder WithTimesReviewed(int timesReviewed)
+        public SrsItemBuilder WithCorrectReviewStreak(int correctReviewStreak)
         {
-            _item.Streak = timesReviewed;
+            _item.CorrectReviewStreak = correctReviewStreak;
             return this;
         }
 
@@ -42,5 +44,35 @@ namespace SpacedRepetition.Net.Tests.Unit
         {
             return _item;
         }
+
+        public IEnumerable<SpacedRepetitionItem> Build(int count)
+        {
+            for (var x = 0; x < count; x++)
+                yield return _item.Clone();
+        }
+    }
+
+    public class SrsItemListBuilder
+    {
+        private List<SpacedRepetitionItem>  _items = new List<SpacedRepetitionItem>();
+
+        public SrsItemListBuilder WithNewItems(int count)
+        {
+            var newItems = new SrsItemBuilder().NeverReviewed().Build(count);
+            _items.AddRange(newItems);
+            return this;
+        }
+
+        public SrsItemListBuilder WithItemsWaitingReview(int count)
+        {
+            var existingItems = new SrsItemBuilder().Build(count);
+            _items.AddRange(existingItems);
+            return this;
+        }
+
+        public IEnumerable<SpacedRepetitionItem> Build()
+        {
+            return _items;
+        } 
     }
 }
