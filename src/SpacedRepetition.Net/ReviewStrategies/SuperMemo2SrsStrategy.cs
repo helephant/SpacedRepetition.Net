@@ -1,11 +1,11 @@
 ﻿using System;
 
-namespace SpacedRepetition.Net.IntervalStrategies
+namespace SpacedRepetition.Net.ReviewStrategies
 {
     /// <summary>
     /// Implementation of the SuperMemo2 algorithm described here: http://www.supermemo.com/english/ol/sm2.htm
     /// </summary>
-    public class SuperMemo2SrsStrategy : IIntervalStrategy
+    public class SuperMemo2SrsStrategy : IReviewStrategy
     {
         private readonly IClock _clock;
 
@@ -28,6 +28,11 @@ namespace SpacedRepetition.Net.IntervalStrategies
 
             var easinessFactor = CalculateEasinessFactor(item.DifficultyRating.Percentage);
             return item.LastReviewDate.AddDays((item.CorrectReviewStreak - 1)*easinessFactor);
+        }
+
+        public DifficultyRating AdjustDifficulty(ISpacedRepetitionItem item, SrsAnswer answer)
+        {
+            throw new NotImplementedException();
         }
 
         private double CalculateEasinessFactor(int difficultyRating)

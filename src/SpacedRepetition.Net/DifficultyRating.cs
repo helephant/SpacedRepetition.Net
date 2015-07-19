@@ -73,6 +73,11 @@ namespace SpacedRepetition.Net
         }
         #endregion
 
+        public override string ToString()
+        {
+            return Percentage + "%";
+        }
+
         public static DifficultyRating Easiest { get { return new DifficultyRating(0); } }
         public static DifficultyRating MostDifficult { get { return new DifficultyRating(100); } }
     }

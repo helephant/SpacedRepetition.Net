@@ -1,5 +1,7 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using NUnit.Framework;
+using SpacedRepetition.Net.ReviewStrategies;
 
 namespace SpacedRepetition.Net.Tests.Unit
 {
@@ -7,14 +9,57 @@ namespace SpacedRepetition.Net.Tests.Unit
     {
         private const int _maxNewCardsPerSession = 5;
         private const int _maxExistingCardsPerSession = 7;
+        private readonly ClockStub _clock = new ClockStub(DateTime.Now);
+
+        [TestCase(SrsAnswer.Perfect)]
+        [TestCase(SrsAnswer.Hesitant)]
+        public void correct_answer_increments_CorrectReviewStreak(SrsAnswer answer)
+        {
+            var correctReviewStreak = 3;
+            var item = new SrsItemBuilder().Due().WithCorrectReviewStreak(correctReviewStreak).Build();
+
+            var session = new SpacedRepetitionSession<SpacedRepetitionItem>(new[] { item });
+            session.Answer(item, answer);
+
+            Assert.That(item.CorrectReviewStreak, Is.EqualTo(correctReviewStreak + 1));
+        }
 
         [Test]
-        public void load_next_item()
+        public void incorrect_answer_resets_CorrectReviewStreak()
         {
-            var item = new SrsItemBuilder().Build();
-            var session = new SpacedRepetitionSession<SpacedRepetitionItem>(new[] { item });
+            var correctReviewStreak = 3;
+            var item = new SrsItemBuilder().Due().WithCorrectReviewStreak(correctReviewStreak).Build();
 
-            Assert.That(session.First(), Is.EqualTo(item));
+            var session = new SpacedRepetitionSession<SpacedRepetitionItem>(new[] { item });
+            session.Answer(item, SrsAnswer.Incorrect);
+
+            Assert.That(item.CorrectReviewStreak, Is.EqualTo(0));
+        }
+
+        [TestCase(SrsAnswer.Perfect)]
+        [TestCase(SrsAnswer.Hesitant)]
+        [TestCase(SrsAnswer.Incorrect)]
+        public void answering_updates_LastReviewDate_to_now(SrsAnswer answer)
+        {
+            var item = new SrsItemBuilder().Due().Build();
+
+            var session = new SpacedRepetitionSession<SpacedRepetitionItem>(new[] {item}) {Clock = _clock};
+            session.Answer(item, answer);
+
+            Assert.That(item.LastReviewDate, Is.EqualTo(_clock.Now()));
+        }
+
+        [TestCase(SrsAnswer.Perfect)]
+        [TestCase(SrsAnswer.Hesitant)]
+        [TestCase(SrsAnswer.Incorrect)]
+        public void answering_updates_DifficultyRating_based_on_review_strategy(SrsAnswer answer)
+        {
+            var item = new SrsItemBuilder().Due().WithDifficultyRating(DifficultyRating.MostDifficult).Build();
+
+            var session = new SpacedRepetitionSession<SpacedRepetitionItem>(new[] { item }) { ReviewStrategy = new SimpleReviewStrategy() };
+            session.Answer(item, answer);
+
+            Assert.That(item.DifficultyRating, Is.EqualTo(DifficultyRating.Easiest));
         }
 
         [Test]

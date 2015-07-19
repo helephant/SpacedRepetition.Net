@@ -1,7 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using SpacedRepetition.Net.IntervalStrategies;
+using SpacedRepetition.Net.ReviewStrategies;
 
 namespace SpacedRepetition.Net
 {
@@ -13,16 +13,18 @@ namespace SpacedRepetition.Net
         private int _existingCardsReturned;
 
 
-        public IIntervalStrategy Strategy { get; set; }
+        public IReviewStrategy ReviewStrategy { get; set; }
         public int MaxNewCards { get; set; }
         public int MaxExistingCards { get; set; }
+        public IClock Clock { get; set; }
 
 
         public SpacedRepetitionSession(IEnumerable<T> items)
         {
             _enumerator = items.GetEnumerator();
 
-            Strategy = new SuperMemo2SrsStrategy();
+            ReviewStrategy = new SuperMemo2SrsStrategy();
+            Clock = new Clock();
             MaxNewCards = 25;
             MaxExistingCards = 100;
         }
@@ -32,8 +34,8 @@ namespace SpacedRepetition.Net
             while (_enumerator.MoveNext())
             {
                 var item = _enumerator.Current;
-                var nextReview = Strategy.NextReview(item);
-                if (nextReview <= DateTime.Now)
+                var nextReview = ReviewStrategy.NextReview(item);
+                if (nextReview <= Clock.Now())
                 {
                     if (item.IsNewItem)
                     {
@@ -54,6 +56,21 @@ namespace SpacedRepetition.Net
         IEnumerator IEnumerable.GetEnumerator()
         {
             return GetEnumerator();
+        }
+
+        public void Answer(SpacedRepetitionItem item, SrsAnswer answer)
+        {
+            if (answer != SrsAnswer.Incorrect)
+            {
+                item.CorrectReviewStreak++;
+            }
+            else
+            {
+                item.CorrectReviewStreak = 0;
+            }
+
+            item.LastReviewDate = Clock.Now();
+            item.DifficultyRating = ReviewStrategy.AdjustDifficulty(item, answer);
         }
     }
 }

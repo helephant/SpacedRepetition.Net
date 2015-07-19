@@ -1,6 +1,6 @@
 ﻿using System;
 using NUnit.Framework;
-using SpacedRepetition.Net.IntervalStrategies;
+using SpacedRepetition.Net.ReviewStrategies;
 
 namespace SpacedRepetition.Net.Tests.Unit
 {
