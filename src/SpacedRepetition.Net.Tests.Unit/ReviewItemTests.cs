@@ -2,12 +2,12 @@
 
 namespace SpacedRepetition.Net.Tests.Unit
 {
-    public class SrsItemTests
+    public class ReviewItemTests
     {
         [Test]
         public void IsNewItem()
         {
-            var item = new SrsItemBuilder().NeverReviewed().Build();
+            var item = new ReviewItemBuilder().NeverReviewed().Build();
 
             Assert.That(item.IsNewItem, Is.True);
         }
@@ -15,7 +15,7 @@ namespace SpacedRepetition.Net.Tests.Unit
         [Test]
         public void IsExistingItem()
         {
-            var item = new SrsItemBuilder().Due().Build();
+            var item = new ReviewItemBuilder().Due().Build();
 
             Assert.That(item.IsNewItem, Is.False);
         }

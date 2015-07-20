@@ -3,11 +3,11 @@ using System.Collections.Generic;
 
 namespace SpacedRepetition.Net.Tests.Unit
 {
-    public class SrsItemBuilder
+    public class ReviewItemBuilder
     {
-        private readonly SrsItem _item = new SrsItem();
+        private readonly ReviewItem _item = new ReviewItem();
 
-        public SrsItemBuilder NeverReviewed()
+        public ReviewItemBuilder NeverReviewed()
         {
             _item.CorrectReviewStreak = 0;
             _item.LastReviewDate = DateTime.MinValue;
@@ -15,7 +15,7 @@ namespace SpacedRepetition.Net.Tests.Unit
             return this;
         }
 
-        public SrsItemBuilder Due()
+        public ReviewItemBuilder Due()
         {
             _item.CorrectReviewStreak = 3;
             _item.LastReviewDate = DateTime.Now.AddDays(-100);
@@ -23,42 +23,42 @@ namespace SpacedRepetition.Net.Tests.Unit
             return this;
         }
 
-        public SrsItemBuilder WithCorrectReviewStreak(int correctReviewStreak)
+        public ReviewItemBuilder WithCorrectReviewStreak(int correctReviewStreak)
         {
             _item.CorrectReviewStreak = correctReviewStreak;
             return this;
         }
 
-        public SrsItemBuilder WithLastReviewDate(DateTime lastReviewDate)
+        public ReviewItemBuilder WithLastReviewDate(DateTime lastReviewDate)
         {
             _item.LastReviewDate = lastReviewDate;
             return this;
         }
 
-        public SrsItemBuilder WithDifficultyRating(int difficultyPercentage)
+        public ReviewItemBuilder WithDifficultyRating(int difficultyPercentage)
         {
             _item.DifficultyRating = new DifficultyRating(difficultyPercentage);
             return this;
         }
 
-        public SrsItemBuilder WithDifficultyRating(DifficultyRating difficulty)
+        public ReviewItemBuilder WithDifficultyRating(DifficultyRating difficulty)
         {
             _item.DifficultyRating = difficulty;
             return this;
         }
 
-        public SrsItem Build()
+        public ReviewItem Build()
         {
             return _item;
         }
 
-        public IEnumerable<SrsItem> Build(int count)
+        public IEnumerable<ReviewItem> Build(int count)
         {
             for (var x = 0; x < count; x++)
                 yield return _item.Clone();
         }
 
-        public static implicit operator SrsItem(SrsItemBuilder builder)
+        public static implicit operator ReviewItem(ReviewItemBuilder builder)
         {
             return builder.Build();
         }

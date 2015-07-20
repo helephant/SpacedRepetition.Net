@@ -1,6 +1,6 @@
 namespace SpacedRepetition.Net
 {
-    public enum SrsAnswer
+    public enum ReviewAnswer
     {
         Perfect = 3,
         Hesitant = 2,

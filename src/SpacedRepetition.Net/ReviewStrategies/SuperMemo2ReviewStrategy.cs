@@ -5,20 +5,20 @@ namespace SpacedRepetition.Net.ReviewStrategies
     /// <summary>
     /// Implementation of the SuperMemo2 algorithm described here: http://www.supermemo.com/english/ol/sm2.htm
     /// </summary>
-    public class SuperMemo2SrsStrategy : IReviewStrategy
+    public class SuperMemo2ReviewStrategy : IReviewStrategy
     {
         private readonly IClock _clock;
 
-        public SuperMemo2SrsStrategy() : this(new Clock())
+        public SuperMemo2ReviewStrategy() : this(new Clock())
         {
         }
 
-        public SuperMemo2SrsStrategy(IClock clock)
+        public SuperMemo2ReviewStrategy(IClock clock)
         {
             _clock = clock;
         }
 
-        public DateTime NextReview(ISrsItem item)
+        public DateTime NextReview(IReviewItem item)
         {
             var now = _clock.Now();
             if(item.CorrectReviewStreak == 0)
@@ -30,7 +30,7 @@ namespace SpacedRepetition.Net.ReviewStrategies
             return item.LastReviewDate.AddDays((item.CorrectReviewStreak - 1)*easinessFactor);
         }
 
-        public DifficultyRating AdjustDifficulty(ISrsItem item, SrsAnswer answer)
+        public DifficultyRating AdjustDifficulty(IReviewItem item, ReviewAnswer answer)
         {
             //EF':=EF+(0.1-(5-q)*(0.08+(5-q)*0.02))
             //where:

@@ -43,12 +43,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ClockStub.cs" />
-    <Compile Include="SrsItemTests.cs" />
-    <Compile Include="SrsSessionTests.cs" />
+    <Compile Include="ReviewItemTests.cs" />
+    <Compile Include="StudySessionTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SrsItemBuilder.cs" />
-    <Compile Include="SrsItemListBuilder.cs" />
-    <Compile Include="SuperMemoSrsStrategyTests.cs" />
+    <Compile Include="ReviewItemBuilder.cs" />
+    <Compile Include="ReviewItemListBuilder.cs" />
+    <Compile Include="ReviewStrategies\SuperMemoReviewStrategyTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

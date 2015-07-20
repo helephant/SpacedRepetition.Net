@@ -4,8 +4,8 @@ using SpacedRepetition.Net.ReviewStrategies;
 
 namespace SpacedRepetition.Net
 {
-    public class SrsSession<T>  : IEnumerable<T> 
-        where T : ISrsItem
+    public class StudySession<T>  : IEnumerable<T> 
+        where T : IReviewItem
     {
         private readonly IEnumerator<T> _enumerator;
         private readonly List<T> _revisionList = new List<T>(); 
@@ -19,19 +19,19 @@ namespace SpacedRepetition.Net
         public IClock Clock { get; set; }
 
 
-        public SrsSession(IEnumerable<T> items)
+        public StudySession(IEnumerable<T> items)
         {
             _enumerator = items.GetEnumerator();
 
-            ReviewStrategy = new SuperMemo2SrsStrategy();
+            ReviewStrategy = new SuperMemo2ReviewStrategy();
             Clock = new Clock();
             MaxNewCards = 25;
             MaxExistingCards = 100;
         }
 
-        public void Answer(T item, SrsAnswer answer)
+        public void Answer(T item, ReviewAnswer answer)
         {
-            if (answer != SrsAnswer.Incorrect)
+            if (answer != ReviewAnswer.Incorrect)
             {
                 item.CorrectReviewStreak++;
             }

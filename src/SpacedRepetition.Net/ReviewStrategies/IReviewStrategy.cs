@@ -4,8 +4,8 @@ namespace SpacedRepetition.Net.ReviewStrategies
 {
     public interface IReviewStrategy
     {
-        DateTime NextReview(ISrsItem item);
+        DateTime NextReview(IReviewItem item);
 
-        DifficultyRating AdjustDifficulty(ISrsItem item, SrsAnswer answer);
+        DifficultyRating AdjustDifficulty(IReviewItem item, ReviewAnswer answer);
     }
 }

@@ -1,0 +1,34 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.30501.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SpacedRepetition.Net", "src\SpacedRepetition.Net\SpacedRepetition.Net.csproj", "{90CD80E4-082B-4972-8461-A50AE67C8F1B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SpacedRepetition.Net.Tests.Unit", "src\SpacedRepetition.Net.Tests.Unit\SpacedRepetition.Net.Tests.Unit.csproj", "{7D1768F0-2E82-44AB-A50C-4BAF3F74BDF4}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Docs", "Docs", "{C7AC66C0-9B92-4ED8-8236-656F9DC486B3}"
+	ProjectSection(SolutionItems) = preProject
+		LICENSE = LICENSE
+		README.md = README.md
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{90CD80E4-082B-4972-8461-A50AE67C8F1B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{90CD80E4-082B-4972-8461-A50AE67C8F1B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{90CD80E4-082B-4972-8461-A50AE67C8F1B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{90CD80E4-082B-4972-8461-A50AE67C8F1B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7D1768F0-2E82-44AB-A50C-4BAF3F74BDF4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7D1768F0-2E82-44AB-A50C-4BAF3F74BDF4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7D1768F0-2E82-44AB-A50C-4BAF3F74BDF4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7D1768F0-2E82-44AB-A50C-4BAF3F74BDF4}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
