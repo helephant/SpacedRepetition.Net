@@ -59,5 +59,65 @@ namespace SpacedRepetition.Net.Tests.Unit
             var expectedInterval = lastReviewDate.AddDays((timesReviewed - 1) * easinessFactor);
             Assert.That(nextReview, Is.EqualTo(expectedInterval));
         }
+
+        [Test]
+        public void perfect_answer_lowers_difficulty()
+        {
+            var item = new SrsItemBuilder().Due().WithDifficultyRating(50).Build();
+            var strategy = new SuperMemo2SrsStrategy();
+
+            var actualDifficulty = strategy.AdjustDifficulty(item, SrsAnswer.Perfect);
+
+            var expectedDifficulty = new DifficultyRating(41);
+            Assert.That(actualDifficulty, Is.EqualTo(expectedDifficulty));
+        }
+
+        [Test]
+        public void hesitant_answer_leaves_difficulty_the_same()
+        {
+            var item = new SrsItemBuilder().Due().WithDifficultyRating(50).Build();
+            var strategy = new SuperMemo2SrsStrategy();
+
+            var actualDifficulty = strategy.AdjustDifficulty(item, SrsAnswer.Hesitant);
+
+            var expectedDifficulty = new DifficultyRating(50);
+            Assert.That(actualDifficulty, Is.EqualTo(expectedDifficulty));
+        }
+
+        [Test]
+        public void incorrect_answer_increases_difficulty()
+        {
+            var item = new SrsItemBuilder().Due().WithDifficultyRating(50).Build();
+            var strategy = new SuperMemo2SrsStrategy();
+
+            var actualDifficulty = strategy.AdjustDifficulty(item, SrsAnswer.Incorrect);
+
+            var expectedDifficulty = new DifficultyRating(61);
+            Assert.That(actualDifficulty, Is.EqualTo(expectedDifficulty));
+        }
+
+        [Test]
+        public void difficulty_can_not_be_greater_than_100()
+        {
+            var item = new SrsItemBuilder().Due().WithDifficultyRating(100).Build();
+            var strategy = new SuperMemo2SrsStrategy();
+
+            var actualDifficulty = strategy.AdjustDifficulty(item, SrsAnswer.Incorrect);
+
+            var expectedDifficulty = new DifficultyRating(100);
+            Assert.That(actualDifficulty, Is.EqualTo(expectedDifficulty));
+        }
+
+        [Test]
+        public void difficulty_can_not_be_less_than_0()
+        {
+            var item = new SrsItemBuilder().Due().WithDifficultyRating(0).Build();
+            var strategy = new SuperMemo2SrsStrategy();
+
+            var actualDifficulty = strategy.AdjustDifficulty(item, SrsAnswer.Perfect);
+
+            var expectedDifficulty = new DifficultyRating(0);
+            Assert.That(actualDifficulty, Is.EqualTo(expectedDifficulty));
+        }
     }
 }

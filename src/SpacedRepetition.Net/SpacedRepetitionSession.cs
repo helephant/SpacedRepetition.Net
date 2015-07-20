@@ -1,4 +1,3 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using SpacedRepetition.Net.ReviewStrategies;
@@ -29,6 +28,21 @@ namespace SpacedRepetition.Net
             MaxExistingCards = 100;
         }
 
+        public void Answer(SpacedRepetitionItem item, SrsAnswer answer)
+        {
+            if (answer != SrsAnswer.Incorrect)
+            {
+                item.CorrectReviewStreak++;
+            }
+            else
+            {
+                item.CorrectReviewStreak = 0;
+            }
+
+            item.LastReviewDate = Clock.Now();
+            item.DifficultyRating = ReviewStrategy.AdjustDifficulty(item, answer);
+        }
+
         public IEnumerator<T> GetEnumerator()
         {
             while (_enumerator.MoveNext())
@@ -56,21 +70,6 @@ namespace SpacedRepetition.Net
         IEnumerator IEnumerable.GetEnumerator()
         {
             return GetEnumerator();
-        }
-
-        public void Answer(SpacedRepetitionItem item, SrsAnswer answer)
-        {
-            if (answer != SrsAnswer.Incorrect)
-            {
-                item.CorrectReviewStreak++;
-            }
-            else
-            {
-                item.CorrectReviewStreak = 0;
-            }
-
-            item.LastReviewDate = Clock.Now();
-            item.DifficultyRating = ReviewStrategy.AdjustDifficulty(item, answer);
         }
     }
 }
