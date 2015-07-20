@@ -4,10 +4,11 @@ using SpacedRepetition.Net.ReviewStrategies;
 
 namespace SpacedRepetition.Net
 {
-    public class SpacedRepetitionSession<T>  : IEnumerable<T> 
-        where T : ISpacedRepetitionItem
+    public class SrsSession<T>  : IEnumerable<T> 
+        where T : ISrsItem
     {
         private readonly IEnumerator<T> _enumerator;
+        private readonly List<T> _revisionList = new List<T>(); 
         private int _newCardsReturned;
         private int _existingCardsReturned;
 
@@ -18,7 +19,7 @@ namespace SpacedRepetition.Net
         public IClock Clock { get; set; }
 
 
-        public SpacedRepetitionSession(IEnumerable<T> items)
+        public SrsSession(IEnumerable<T> items)
         {
             _enumerator = items.GetEnumerator();
 
@@ -28,7 +29,7 @@ namespace SpacedRepetition.Net
             MaxExistingCards = 100;
         }
 
-        public void Answer(SpacedRepetitionItem item, SrsAnswer answer)
+        public void Answer(T item, SrsAnswer answer)
         {
             if (answer != SrsAnswer.Incorrect)
             {
@@ -37,6 +38,7 @@ namespace SpacedRepetition.Net
             else
             {
                 item.CorrectReviewStreak = 0;
+                _revisionList.Add(item);
             }
 
             item.LastReviewDate = Clock.Now();
@@ -64,6 +66,12 @@ namespace SpacedRepetition.Net
                             yield return item;
                     }
                 }
+            }
+
+            var revisionEnumerator = _revisionList.GetEnumerator();
+            while (revisionEnumerator.MoveNext())
+            {
+                yield return revisionEnumerator.Current;
             }
         }
 

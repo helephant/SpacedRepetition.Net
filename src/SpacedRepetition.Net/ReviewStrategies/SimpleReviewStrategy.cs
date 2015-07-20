@@ -4,12 +4,12 @@ namespace SpacedRepetition.Net.ReviewStrategies
 {
     public class SimpleReviewStrategy : IReviewStrategy
     {
-        public DateTime NextReview(ISpacedRepetitionItem item)
+        public DateTime NextReview(ISrsItem item)
         {
             return DateTime.Now;
         }
 
-        public DifficultyRating AdjustDifficulty(ISpacedRepetitionItem item, SrsAnswer answer)
+        public DifficultyRating AdjustDifficulty(ISrsItem item, SrsAnswer answer)
         {
             return DifficultyRating.Easiest;
         }

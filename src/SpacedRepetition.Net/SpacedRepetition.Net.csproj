@@ -43,10 +43,10 @@
     <Compile Include="DifficultyRating.cs" />
     <Compile Include="IClock.cs" />
     <Compile Include="ReviewStrategies\SuperMemo2SrsStrategy.cs" />
-    <Compile Include="ISpacedRepetitionItem.cs" />
+    <Compile Include="ISrsItem.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SpacedRepetitionItem.cs" />
-    <Compile Include="SpacedRepetitionSession.cs" />
+    <Compile Include="SrsItem.cs" />
+    <Compile Include="SrsSession.cs" />
     <Compile Include="ReviewStrategies\IReviewStrategy.cs" />
     <Compile Include="ReviewStrategies\SimpleReviewStrategy.cs" />
     <Compile Include="SrsAnswer.cs" />

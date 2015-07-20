@@ -7,7 +7,7 @@ namespace SpacedRepetition.Net.Tests.Unit
     public class SrsItemListBuilder
     {
         private DateTime _now = DateTime.Now;
-        private readonly List<SpacedRepetitionItem>  _items = new List<SpacedRepetitionItem>();
+        private readonly List<SrsItem>  _items = new List<SrsItem>();
 
         public SrsItemListBuilder WithNewItems(int count)
         {
@@ -26,7 +26,7 @@ namespace SpacedRepetition.Net.Tests.Unit
         public SrsItemListBuilder WithFutureItems(int count)
         {
             var itemsToAdd = new SrsItemBuilder()
-                .WithLastReviewDate(DateTime.Now)
+                .WithLastReviewDate(_now)
                 .WithDifficultyRating(DifficultyRating.Easiest)
                 .WithCorrectReviewStreak(15)
                 .Build(count);
@@ -43,12 +43,12 @@ namespace SpacedRepetition.Net.Tests.Unit
             return this;
         }
 
-        public IEnumerable<SpacedRepetitionItem> Build()
+        public IEnumerable<SrsItem> Build()
         {
             return _items;
         }
 
-        public static implicit operator List<SpacedRepetitionItem>(SrsItemListBuilder builder)
+        public static implicit operator List<SrsItem>(SrsItemListBuilder builder)
         {
             return builder.Build().ToList();
         }

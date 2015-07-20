@@ -2,7 +2,7 @@ using System;
 
 namespace SpacedRepetition.Net
 {
-    public interface ISpacedRepetitionItem
+    public interface ISrsItem
     {
         int CorrectReviewStreak { get; set; }
         DateTime LastReviewDate { get; set; }

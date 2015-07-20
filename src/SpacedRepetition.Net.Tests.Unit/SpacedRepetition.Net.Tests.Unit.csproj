@@ -43,8 +43,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ClockStub.cs" />
-    <Compile Include="SpacedRepetitionItemTests.cs" />
-    <Compile Include="SpacedRepetitionSessionTests.cs" />
+    <Compile Include="SrsItemTests.cs" />
+    <Compile Include="SrsSessionTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SrsItemBuilder.cs" />
     <Compile Include="SrsItemListBuilder.cs" />

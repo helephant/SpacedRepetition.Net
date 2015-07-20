@@ -18,7 +18,7 @@ namespace SpacedRepetition.Net.ReviewStrategies
             _clock = clock;
         }
 
-        public DateTime NextReview(ISpacedRepetitionItem item)
+        public DateTime NextReview(ISrsItem item)
         {
             var now = _clock.Now();
             if(item.CorrectReviewStreak == 0)
@@ -30,7 +30,7 @@ namespace SpacedRepetition.Net.ReviewStrategies
             return item.LastReviewDate.AddDays((item.CorrectReviewStreak - 1)*easinessFactor);
         }
 
-        public DifficultyRating AdjustDifficulty(ISpacedRepetitionItem item, SrsAnswer answer)
+        public DifficultyRating AdjustDifficulty(ISrsItem item, SrsAnswer answer)
         {
             //EF':=EF+(0.1-(5-q)*(0.08+(5-q)*0.02))
             //where:

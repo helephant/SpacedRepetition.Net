@@ -5,7 +5,7 @@ using SpacedRepetition.Net.ReviewStrategies;
 
 namespace SpacedRepetition.Net.Tests.Unit
 {
-    public class SpacedRepetitionSessionTests
+    public class SrsSessionTests
     {
         private const int _maxNewCardsPerSession = 5;
         private const int _maxExistingCardsPerSession = 7;
@@ -18,7 +18,7 @@ namespace SpacedRepetition.Net.Tests.Unit
             var correctReviewStreak = 3;
             var item = new SrsItemBuilder().Due().WithCorrectReviewStreak(correctReviewStreak).Build();
 
-            var session = new SpacedRepetitionSession<SpacedRepetitionItem>(new[] { item });
+            var session = new SrsSession<SrsItem>(new[] { item });
             session.Answer(item, answer);
 
             Assert.That(item.CorrectReviewStreak, Is.EqualTo(correctReviewStreak + 1));
@@ -30,7 +30,7 @@ namespace SpacedRepetition.Net.Tests.Unit
             var correctReviewStreak = 3;
             var item = new SrsItemBuilder().Due().WithCorrectReviewStreak(correctReviewStreak).Build();
 
-            var session = new SpacedRepetitionSession<SpacedRepetitionItem>(new[] { item });
+            var session = new SrsSession<SrsItem>(new[] { item });
             session.Answer(item, SrsAnswer.Incorrect);
 
             Assert.That(item.CorrectReviewStreak, Is.EqualTo(0));
@@ -43,7 +43,7 @@ namespace SpacedRepetition.Net.Tests.Unit
         {
             var item = new SrsItemBuilder().Due().Build();
 
-            var session = new SpacedRepetitionSession<SpacedRepetitionItem>(new[] {item}) {Clock = _clock};
+            var session = new SrsSession<SrsItem>(new[] {item}) {Clock = _clock};
             session.Answer(item, answer);
 
             Assert.That(item.LastReviewDate, Is.EqualTo(_clock.Now()));
@@ -56,10 +56,39 @@ namespace SpacedRepetition.Net.Tests.Unit
         {
             var item = new SrsItemBuilder().Due().WithDifficultyRating(DifficultyRating.MostDifficult).Build();
 
-            var session = new SpacedRepetitionSession<SpacedRepetitionItem>(new[] { item }) { ReviewStrategy = new SimpleReviewStrategy() };
+            var session = new SrsSession<SrsItem>(new[] { item }) { ReviewStrategy = new SimpleReviewStrategy() };
             session.Answer(item, answer);
 
             Assert.That(item.DifficultyRating, Is.EqualTo(DifficultyRating.Easiest));
+        }
+
+        [TestCase(SrsAnswer.Perfect)]
+        [TestCase(SrsAnswer.Hesitant)]
+        public void correct_items_are_removed_from_review_queue(SrsAnswer answer)
+        {
+            var items = new SrsItemListBuilder()
+                            .WithDueItems(1)
+                            .Build();
+            var session = new SrsSession<SrsItem>(items);
+
+            var item = session.First();
+            session.Answer(item, answer);
+
+            Assert.That(session.Count(), Is.EqualTo(0));
+        }
+
+        [Test]
+        public void incorrect_items_stay_in_review_queue()
+        {
+            var items = new SrsItemListBuilder()
+                            .WithDueItems(1)
+                            .Build();
+            var session = new SrsSession<SrsItem>(items);
+
+            var item = session.First();
+            session.Answer(item, SrsAnswer.Incorrect);
+
+            Assert.That(session.First(), Is.EqualTo(item));
         }
 
         [Test]
@@ -70,7 +99,7 @@ namespace SpacedRepetition.Net.Tests.Unit
                             .WithDueItems(dueItems)
                             .WithFutureItems(3)
                             .Build();
-            var session = new SpacedRepetitionSession<SpacedRepetitionItem>(items);
+            var session = new SrsSession<SrsItem>(items);
 
             Assert.That(session.Count(), Is.EqualTo(dueItems));
         }
@@ -79,7 +108,7 @@ namespace SpacedRepetition.Net.Tests.Unit
         public void limit_new_cards_per_session()
         {
             var items = new SrsItemListBuilder().WithNewItems(_maxNewCardsPerSession + 1).Build();
-            var session = new SpacedRepetitionSession<SpacedRepetitionItem>(items) { MaxNewCards = _maxNewCardsPerSession };
+            var session = new SrsSession<SrsItem>(items) { MaxNewCards = _maxNewCardsPerSession };
 
             Assert.That(session.Count(), Is.EqualTo(_maxNewCardsPerSession));
         }
@@ -93,7 +122,7 @@ namespace SpacedRepetition.Net.Tests.Unit
                 .WithNewItems(2)
                 .Build();
 
-            var session = new SpacedRepetitionSession<SpacedRepetitionItem>(items) { MaxNewCards = _maxNewCardsPerSession };
+            var session = new SrsSession<SrsItem>(items) { MaxNewCards = _maxNewCardsPerSession };
 
             Assert.That(session.Count(x => x.IsNewItem), Is.EqualTo(_maxNewCardsPerSession));
         }
@@ -102,7 +131,7 @@ namespace SpacedRepetition.Net.Tests.Unit
         public void limit_existing_cards_per_session()
         {
             var items = new SrsItemListBuilder().WithExistingItems(_maxExistingCardsPerSession + 1).Build();
-            var session = new SpacedRepetitionSession<SpacedRepetitionItem>(items) { MaxExistingCards = _maxExistingCardsPerSession };
+            var session = new SrsSession<SrsItem>(items) { MaxExistingCards = _maxExistingCardsPerSession };
 
             Assert.That(session.Count(), Is.EqualTo(_maxExistingCardsPerSession));
         }
@@ -116,7 +145,7 @@ namespace SpacedRepetition.Net.Tests.Unit
                                .WithExistingItems(2)
                                .Build();
 
-            var session = new SpacedRepetitionSession<SpacedRepetitionItem>(items) { MaxExistingCards = _maxExistingCardsPerSession};
+            var session = new SrsSession<SrsItem>(items) { MaxExistingCards = _maxExistingCardsPerSession};
 
             Assert.That(session.Count(x => !x.IsNewItem), Is.EqualTo(_maxExistingCardsPerSession));
         }

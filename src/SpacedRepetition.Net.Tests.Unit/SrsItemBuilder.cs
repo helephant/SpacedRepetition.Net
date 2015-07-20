@@ -5,7 +5,7 @@ namespace SpacedRepetition.Net.Tests.Unit
 {
     public class SrsItemBuilder
     {
-        private readonly SpacedRepetitionItem _item = new SpacedRepetitionItem();
+        private readonly SrsItem _item = new SrsItem();
 
         public SrsItemBuilder NeverReviewed()
         {
@@ -47,18 +47,18 @@ namespace SpacedRepetition.Net.Tests.Unit
             return this;
         }
 
-        public SpacedRepetitionItem Build()
+        public SrsItem Build()
         {
             return _item;
         }
 
-        public IEnumerable<SpacedRepetitionItem> Build(int count)
+        public IEnumerable<SrsItem> Build(int count)
         {
             for (var x = 0; x < count; x++)
                 yield return _item.Clone();
         }
 
-        public static implicit operator SpacedRepetitionItem(SrsItemBuilder builder)
+        public static implicit operator SrsItem(SrsItemBuilder builder)
         {
             return builder.Build();
         }

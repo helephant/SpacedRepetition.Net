@@ -2,7 +2,7 @@
 
 namespace SpacedRepetition.Net.Tests.Unit
 {
-    public class SpacedRepetitionItemTests
+    public class SrsItemTests
     {
         [Test]
         public void IsNewItem()

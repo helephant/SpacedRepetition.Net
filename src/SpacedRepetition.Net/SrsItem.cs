@@ -2,15 +2,15 @@ using System;
 
 namespace SpacedRepetition.Net
 {
-    public class SpacedRepetitionItem : ISpacedRepetitionItem
+    public class SrsItem : ISrsItem
     {
         public int CorrectReviewStreak { get; set; }
         public DateTime LastReviewDate { get; set; }
         public DifficultyRating DifficultyRating { get; set; }
 
-        public SpacedRepetitionItem Clone()
+        public SrsItem Clone()
         {
-            return new SpacedRepetitionItem
+            return new SrsItem
             {
                 DifficultyRating = DifficultyRating,
                 LastReviewDate = LastReviewDate,
