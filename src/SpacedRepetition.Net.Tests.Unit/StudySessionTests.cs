@@ -11,60 +11,60 @@ namespace SpacedRepetition.Net.Tests.Unit
         private const int _maxExistingCardsPerSession = 7;
         private readonly ClockStub _clock = new ClockStub(DateTime.Now);
 
-        [TestCase(ReviewAnswer.Perfect)]
-        [TestCase(ReviewAnswer.Hesitant)]
-        public void correct_answer_increments_CorrectReviewStreak(ReviewAnswer answer)
+        [TestCase(ReviewOutcome.Perfect)]
+        [TestCase(ReviewOutcome.Hesitant)]
+        public void correct_review_outcome_increments_CorrectReviewStreak(ReviewOutcome outcome)
         {
             var correctReviewStreak = 3;
             var item = new ReviewItemBuilder().Due().WithCorrectReviewStreak(correctReviewStreak).Build();
 
             var session = new StudySession<ReviewItem>(new[] { item });
-            session.Answer(item, answer);
+            session.Review(item, outcome);
 
             Assert.That(item.CorrectReviewStreak, Is.EqualTo(correctReviewStreak + 1));
         }
 
         [Test]
-        public void incorrect_answer_resets_CorrectReviewStreak()
+        public void incorrect_review_resets_CorrectReviewStreak()
         {
             var correctReviewStreak = 3;
             var item = new ReviewItemBuilder().Due().WithCorrectReviewStreak(correctReviewStreak).Build();
 
             var session = new StudySession<ReviewItem>(new[] { item });
-            session.Answer(item, ReviewAnswer.Incorrect);
+            session.Review(item, ReviewOutcome.Incorrect);
 
             Assert.That(item.CorrectReviewStreak, Is.EqualTo(0));
         }
 
-        [TestCase(ReviewAnswer.Perfect)]
-        [TestCase(ReviewAnswer.Hesitant)]
-        [TestCase(ReviewAnswer.Incorrect)]
-        public void answering_updates_LastReviewDate_to_now(ReviewAnswer answer)
+        [TestCase(ReviewOutcome.Perfect)]
+        [TestCase(ReviewOutcome.Hesitant)]
+        [TestCase(ReviewOutcome.Incorrect)]
+        public void reviewing_updates_LastReviewDate_to_now(ReviewOutcome outcome)
         {
             var item = new ReviewItemBuilder().Due().Build();
 
             var session = new StudySession<ReviewItem>(new[] {item}) {Clock = _clock};
-            session.Answer(item, answer);
+            session.Review(item, outcome);
 
             Assert.That(item.LastReviewDate, Is.EqualTo(_clock.Now()));
         }
 
-        [TestCase(ReviewAnswer.Perfect)]
-        [TestCase(ReviewAnswer.Hesitant)]
-        [TestCase(ReviewAnswer.Incorrect)]
-        public void answering_updates_DifficultyRating_based_on_review_strategy(ReviewAnswer answer)
+        [TestCase(ReviewOutcome.Perfect)]
+        [TestCase(ReviewOutcome.Hesitant)]
+        [TestCase(ReviewOutcome.Incorrect)]
+        public void reviewing_updates_DifficultyRating_based_on_review_strategy(ReviewOutcome outcome)
         {
             var item = new ReviewItemBuilder().Due().WithDifficultyRating(DifficultyRating.MostDifficult).Build();
 
             var session = new StudySession<ReviewItem>(new[] { item }) { ReviewStrategy = new SimpleReviewStrategy() };
-            session.Answer(item, answer);
+            session.Review(item, outcome);
 
             Assert.That(item.DifficultyRating, Is.EqualTo(DifficultyRating.Easiest));
         }
 
-        [TestCase(ReviewAnswer.Perfect)]
-        [TestCase(ReviewAnswer.Hesitant)]
-        public void correct_items_are_removed_from_review_queue(ReviewAnswer answer)
+        [TestCase(ReviewOutcome.Perfect)]
+        [TestCase(ReviewOutcome.Hesitant)]
+        public void correct_items_are_removed_from_review_queue(ReviewOutcome outcome)
         {
             var items = new ReviewItemListBuilder()
                             .WithDueItems(1)
@@ -72,7 +72,7 @@ namespace SpacedRepetition.Net.Tests.Unit
             var session = new StudySession<ReviewItem>(items);
 
             var item = session.First();
-            session.Answer(item, answer);
+            session.Review(item, outcome);
 
             Assert.That(session.Count(), Is.EqualTo(0));
         }
@@ -86,7 +86,7 @@ namespace SpacedRepetition.Net.Tests.Unit
             var session = new StudySession<ReviewItem>(items);
 
             var item = session.First();
-            session.Answer(item, ReviewAnswer.Incorrect);
+            session.Review(item, ReviewOutcome.Incorrect);
 
             Assert.That(session.First(), Is.EqualTo(item));
         }
@@ -124,7 +124,7 @@ namespace SpacedRepetition.Net.Tests.Unit
 
             var session = new StudySession<ReviewItem>(items) { MaxNewCards = _maxNewCardsPerSession };
 
-            Assert.That(session.Count(x => x.IsNewItem), Is.EqualTo(_maxNewCardsPerSession));
+            Assert.That(session.Count(x => x.LastReviewDate == DateTime.MinValue), Is.EqualTo(_maxNewCardsPerSession));
         }
 
         [Test]
@@ -147,7 +147,7 @@ namespace SpacedRepetition.Net.Tests.Unit
 
             var session = new StudySession<ReviewItem>(items) { MaxExistingCards = _maxExistingCardsPerSession};
 
-            Assert.That(session.Count(x => !x.IsNewItem), Is.EqualTo(_maxExistingCardsPerSession));
+            Assert.That(session.Count(x => x.LastReviewDate != DateTime.MinValue), Is.EqualTo(_maxExistingCardsPerSession));
         }
     }
 }

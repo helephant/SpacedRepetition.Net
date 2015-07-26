@@ -30,7 +30,7 @@ namespace SpacedRepetition.Net.ReviewStrategies
             return item.LastReviewDate.AddDays((item.CorrectReviewStreak - 1)*easinessFactor);
         }
 
-        public DifficultyRating AdjustDifficulty(IReviewItem item, ReviewAnswer answer)
+        public DifficultyRating AdjustDifficulty(IReviewItem item, ReviewOutcome outcome)
         {
             //EF':=EF+(0.1-(5-q)*(0.08+(5-q)*0.02))
             //where:
@@ -40,7 +40,7 @@ namespace SpacedRepetition.Net.ReviewStrategies
             //If EF is less than 1.3 then let EF be 1.3.
 
             var currentEasinessFactor = DifficultyRatingToEasinessFactor(item.DifficultyRating.Percentage);
-            var newEasinessFactor = currentEasinessFactor + (0.1 - (3 - (int)answer)*(0.08 + (3 - (int)answer)*0.02));
+            var newEasinessFactor = currentEasinessFactor + (0.1 - (3 - (int)outcome)*(0.08 + (3 - (int)outcome)*0.02));
             var newDifficultyRating = EasinessFactorToDifficultyRating(newEasinessFactor);
 
             if (newDifficultyRating > 100)

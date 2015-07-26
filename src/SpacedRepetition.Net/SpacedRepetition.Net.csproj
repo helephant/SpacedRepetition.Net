@@ -49,7 +49,7 @@
     <Compile Include="StudySession.cs" />
     <Compile Include="ReviewStrategies\IReviewStrategy.cs" />
     <Compile Include="ReviewStrategies\SimpleReviewStrategy.cs" />
-    <Compile Include="ReviewAnswer.cs" />
+    <Compile Include="ReviewOutcome.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="SpacedRepetition.Net.nuspec" />

@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using SpacedRepetition.Net.ReviewStrategies;
@@ -29,9 +30,9 @@ namespace SpacedRepetition.Net
             MaxExistingCards = 100;
         }
 
-        public void Answer(T item, ReviewAnswer answer)
+        public void Review(T item, ReviewOutcome outcome)
         {
-            if (answer != ReviewAnswer.Incorrect)
+            if (outcome != ReviewOutcome.Incorrect)
             {
                 item.CorrectReviewStreak++;
             }
@@ -42,7 +43,7 @@ namespace SpacedRepetition.Net
             }
 
             item.LastReviewDate = Clock.Now();
-            item.DifficultyRating = ReviewStrategy.AdjustDifficulty(item, answer);
+            item.DifficultyRating = ReviewStrategy.AdjustDifficulty(item, outcome);
         }
 
         public IEnumerator<T> GetEnumerator()
@@ -53,7 +54,7 @@ namespace SpacedRepetition.Net
                 var nextReview = ReviewStrategy.NextReview(item);
                 if (nextReview <= Clock.Now())
                 {
-                    if (item.IsNewItem)
+                    if (IsNewItem(item))
                     {
                         _newCardsReturned++;
                         if (_newCardsReturned <= MaxNewCards)
@@ -73,6 +74,11 @@ namespace SpacedRepetition.Net
             {
                 yield return revisionEnumerator.Current;
             }
+        }
+
+        private static bool IsNewItem(IReviewItem item)
+        {
+            return item.LastReviewDate == DateTime.MinValue;
         }
 
         IEnumerator IEnumerable.GetEnumerator()

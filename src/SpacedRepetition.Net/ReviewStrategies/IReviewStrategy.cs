@@ -6,6 +6,6 @@ namespace SpacedRepetition.Net.ReviewStrategies
     {
         DateTime NextReview(IReviewItem item);
 
-        DifficultyRating AdjustDifficulty(IReviewItem item, ReviewAnswer answer);
+        DifficultyRating AdjustDifficulty(IReviewItem item, ReviewOutcome outcome);
     }
 }

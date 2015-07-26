@@ -61,36 +61,36 @@ namespace SpacedRepetition.Net.Tests.Unit.ReviewStrategies
         }
 
         [Test]
-        public void perfect_answer_lowers_difficulty()
+        public void perfect_review_lowers_difficulty()
         {
             var item = new ReviewItemBuilder().Due().WithDifficultyRating(50).Build();
             var strategy = new SuperMemo2ReviewStrategy();
 
-            var actualDifficulty = strategy.AdjustDifficulty(item, ReviewAnswer.Perfect);
+            var actualDifficulty = strategy.AdjustDifficulty(item, ReviewOutcome.Perfect);
 
             var expectedDifficulty = new DifficultyRating(41);
             Assert.That(actualDifficulty, Is.EqualTo(expectedDifficulty));
         }
 
         [Test]
-        public void hesitant_answer_leaves_difficulty_the_same()
+        public void hesitant_review_leaves_difficulty_the_same()
         {
             var item = new ReviewItemBuilder().Due().WithDifficultyRating(50).Build();
             var strategy = new SuperMemo2ReviewStrategy();
 
-            var actualDifficulty = strategy.AdjustDifficulty(item, ReviewAnswer.Hesitant);
+            var actualDifficulty = strategy.AdjustDifficulty(item, ReviewOutcome.Hesitant);
 
             var expectedDifficulty = new DifficultyRating(50);
             Assert.That(actualDifficulty, Is.EqualTo(expectedDifficulty));
         }
 
         [Test]
-        public void incorrect_answer_increases_difficulty()
+        public void incorrect_review_increases_difficulty()
         {
             var item = new ReviewItemBuilder().Due().WithDifficultyRating(50).Build();
             var strategy = new SuperMemo2ReviewStrategy();
 
-            var actualDifficulty = strategy.AdjustDifficulty(item, ReviewAnswer.Incorrect);
+            var actualDifficulty = strategy.AdjustDifficulty(item, ReviewOutcome.Incorrect);
 
             var expectedDifficulty = new DifficultyRating(61);
             Assert.That(actualDifficulty, Is.EqualTo(expectedDifficulty));
@@ -102,7 +102,7 @@ namespace SpacedRepetition.Net.Tests.Unit.ReviewStrategies
             var item = new ReviewItemBuilder().Due().WithDifficultyRating(100).Build();
             var strategy = new SuperMemo2ReviewStrategy();
 
-            var actualDifficulty = strategy.AdjustDifficulty(item, ReviewAnswer.Incorrect);
+            var actualDifficulty = strategy.AdjustDifficulty(item, ReviewOutcome.Incorrect);
 
             var expectedDifficulty = new DifficultyRating(100);
             Assert.That(actualDifficulty, Is.EqualTo(expectedDifficulty));
@@ -114,7 +114,7 @@ namespace SpacedRepetition.Net.Tests.Unit.ReviewStrategies
             var item = new ReviewItemBuilder().Due().WithDifficultyRating(0).Build();
             var strategy = new SuperMemo2ReviewStrategy();
 
-            var actualDifficulty = strategy.AdjustDifficulty(item, ReviewAnswer.Perfect);
+            var actualDifficulty = strategy.AdjustDifficulty(item, ReviewOutcome.Perfect);
 
             var expectedDifficulty = new DifficultyRating(0);
             Assert.That(actualDifficulty, Is.EqualTo(expectedDifficulty));

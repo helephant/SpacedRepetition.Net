@@ -17,10 +17,5 @@ namespace SpacedRepetition.Net
                 CorrectReviewStreak = CorrectReviewStreak
             };
         }
-
-        public bool IsNewItem
-        {
-            get { return LastReviewDate == DateTime.MinValue;  }
-        }
     }
 }

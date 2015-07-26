@@ -7,6 +7,5 @@ namespace SpacedRepetition.Net
         int CorrectReviewStreak { get; set; }
         DateTime LastReviewDate { get; set; }
         DifficultyRating DifficultyRating { get; set; }
-        bool IsNewItem { get; }
     }
 }

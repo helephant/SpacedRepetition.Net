@@ -9,7 +9,7 @@ namespace SpacedRepetition.Net.ReviewStrategies
             return DateTime.Now;
         }
 
-        public DifficultyRating AdjustDifficulty(IReviewItem item, ReviewAnswer answer)
+        public DifficultyRating AdjustDifficulty(IReviewItem item, ReviewOutcome outcome)
         {
             return DifficultyRating.Easiest;
         }
