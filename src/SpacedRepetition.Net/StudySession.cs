@@ -35,11 +35,13 @@ namespace SpacedRepetition.Net
             if (outcome != ReviewOutcome.Incorrect)
             {
                 item.CorrectReviewStreak++;
+                _revisionList.Remove(item);
             }
             else
             {
                 item.CorrectReviewStreak = 0;
-                _revisionList.Add(item);
+                if(!_revisionList.Contains(item))
+                    _revisionList.Add(item);
             }
 
             item.LastReviewDate = Clock.Now();
@@ -69,10 +71,9 @@ namespace SpacedRepetition.Net
                 }
             }
 
-            var revisionEnumerator = _revisionList.GetEnumerator();
-            while (revisionEnumerator.MoveNext())
+            while (_revisionList.Count > 0)
             {
-                yield return revisionEnumerator.Current;
+                yield return _revisionList[0];
             }
         }
 

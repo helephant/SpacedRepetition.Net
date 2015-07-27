@@ -92,6 +92,27 @@ namespace SpacedRepetition.Net.Tests.Unit
         }
 
         [Test]
+        public void incorrect_items_stay_in_review_queue_until_correct()
+        {
+            var items = new ReviewItemListBuilder()
+                            .WithDueItems(1)
+                            .Build();
+            var session = new StudySession<ReviewItem>(items);
+
+            var incorrectTimes = 0;
+            foreach (var reviewItem in session)
+            {
+                if (incorrectTimes++ < 3)
+                    session.Review(reviewItem, ReviewOutcome.Incorrect);
+                else break;
+            }
+
+            session.Review(session.First(), ReviewOutcome.Perfect);
+
+            Assert.That(session, Is.Empty);
+        }
+
+        [Test]
         public void only_return_due_items()
         {
             var dueItems = 2;
