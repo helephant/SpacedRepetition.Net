@@ -4,6 +4,7 @@ namespace SpacedRepetition.Net
     {
         Perfect = 3,
         Hesitant = 2,
-        Incorrect = 1
+        Incorrect = 1,
+        NeverReviewed = 0
     }
 }
