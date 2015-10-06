@@ -73,6 +73,15 @@ namespace SpacedRepetition.Net
         }
         #endregion
 
+        public static implicit operator int(DifficultyRating rating)
+        {
+            return rating.Percentage;
+        }
+        public static implicit operator DifficultyRating(int percentage)
+        {
+            return new DifficultyRating(percentage);
+        }
+
         public override string ToString()
         {
             return Percentage + "%";
