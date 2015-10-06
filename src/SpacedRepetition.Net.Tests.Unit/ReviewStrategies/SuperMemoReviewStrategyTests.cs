@@ -27,7 +27,7 @@ namespace SpacedRepetition.Net.Tests.Unit.ReviewStrategies
 
             var nextReview = strategy.NextReview(item);
 
-            Assert.That(nextReview, Is.EqualTo(item.LastReviewDate.AddDays(6)));
+            Assert.That(nextReview, Is.EqualTo(item.ReviewDate.AddDays(6)));
         }
 
         [Test]

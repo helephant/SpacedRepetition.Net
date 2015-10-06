@@ -24,10 +24,10 @@ namespace SpacedRepetition.Net.ReviewStrategies
             if(item.CorrectReviewStreak == 0)
                 return now;
             if(item.CorrectReviewStreak == 1)
-                return item.LastReviewDate.AddDays(6);
+                return item.ReviewDate.AddDays(6);
 
             var easinessFactor = DifficultyRatingToEasinessFactor(item.DifficultyRating.Percentage);
-            return item.LastReviewDate.AddDays((item.CorrectReviewStreak - 1)*easinessFactor);
+            return item.ReviewDate.AddDays((item.CorrectReviewStreak - 1)*easinessFactor);
         }
 
         public DifficultyRating AdjustDifficulty(IReviewItem item, ReviewOutcome outcome)

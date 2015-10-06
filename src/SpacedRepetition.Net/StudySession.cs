@@ -44,7 +44,7 @@ namespace SpacedRepetition.Net
                     _revisionList.Add(item);
             }
 
-            item.LastReviewDate = Clock.Now();
+            item.ReviewDate = Clock.Now();
             item.DifficultyRating = ReviewStrategy.AdjustDifficulty(item, outcome);
         }
 
@@ -79,7 +79,7 @@ namespace SpacedRepetition.Net
 
         private static bool IsNewItem(IReviewItem item)
         {
-            return item.LastReviewDate == DateTime.MinValue;
+            return item.ReviewDate == DateTime.MinValue;
         }
 
         IEnumerator IEnumerable.GetEnumerator()

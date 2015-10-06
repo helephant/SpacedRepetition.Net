@@ -46,7 +46,7 @@ namespace SpacedRepetition.Net.Tests.Unit
             var session = new StudySession<ReviewItem>(new[] {item}) {Clock = _clock};
             session.Review(item, outcome);
 
-            Assert.That(item.LastReviewDate, Is.EqualTo(_clock.Now()));
+            Assert.That(item.ReviewDate, Is.EqualTo(_clock.Now()));
         }
 
         [TestCase(ReviewOutcome.Perfect)]
@@ -145,7 +145,7 @@ namespace SpacedRepetition.Net.Tests.Unit
 
             var session = new StudySession<ReviewItem>(items) { MaxNewCards = _maxNewCardsPerSession };
 
-            Assert.That(session.Count(x => x.LastReviewDate == DateTime.MinValue), Is.EqualTo(_maxNewCardsPerSession));
+            Assert.That(session.Count(x => x.ReviewDate == DateTime.MinValue), Is.EqualTo(_maxNewCardsPerSession));
         }
 
         [Test]
@@ -168,7 +168,7 @@ namespace SpacedRepetition.Net.Tests.Unit
 
             var session = new StudySession<ReviewItem>(items) { MaxExistingCards = _maxExistingCardsPerSession};
 
-            Assert.That(session.Count(x => x.LastReviewDate != DateTime.MinValue), Is.EqualTo(_maxExistingCardsPerSession));
+            Assert.That(session.Count(x => x.ReviewDate != DateTime.MinValue), Is.EqualTo(_maxExistingCardsPerSession));
         }
     }
 }

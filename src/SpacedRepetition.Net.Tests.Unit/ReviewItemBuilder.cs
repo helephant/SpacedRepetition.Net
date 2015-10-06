@@ -10,7 +10,7 @@ namespace SpacedRepetition.Net.Tests.Unit
         public ReviewItemBuilder NeverReviewed()
         {
             _item.CorrectReviewStreak = 0;
-            _item.LastReviewDate = DateTime.MinValue;
+            _item.ReviewDate = DateTime.MinValue;
             _item.DifficultyRating = DifficultyRating.Easiest;
             return this;
         }
@@ -18,7 +18,7 @@ namespace SpacedRepetition.Net.Tests.Unit
         public ReviewItemBuilder Due()
         {
             _item.CorrectReviewStreak = 3;
-            _item.LastReviewDate = DateTime.Now.AddDays(-100);
+            _item.ReviewDate = DateTime.Now.AddDays(-100);
             _item.DifficultyRating = DifficultyRating.MostDifficult;
             return this;
         }
@@ -31,7 +31,7 @@ namespace SpacedRepetition.Net.Tests.Unit
 
         public ReviewItemBuilder WithLastReviewDate(DateTime lastReviewDate)
         {
-            _item.LastReviewDate = lastReviewDate;
+            _item.ReviewDate = lastReviewDate;
             return this;
         }
 
