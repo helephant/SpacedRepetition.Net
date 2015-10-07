@@ -82,6 +82,15 @@ namespace SpacedRepetition.Net
             return new DifficultyRating(percentage);
         }
 
+        public static implicit operator byte(DifficultyRating rating)
+        {
+            return (byte)rating.Percentage;
+        }
+        public static implicit operator DifficultyRating(byte percentage)
+        {
+            return new DifficultyRating(percentage);
+        }
+
         public override string ToString()
         {
             return Percentage + "%";

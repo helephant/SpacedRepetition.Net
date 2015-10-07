@@ -22,5 +22,23 @@ namespace SpacedRepetition.Net.Tests.Unit
 
             Assert.That(difficultyRating.Percentage, Is.EqualTo(percentage));
         }
+
+        [Test]
+        public void implicitly_convert_from_difficulty_rating_to_byte()
+        {
+            var difficultyRating = new DifficultyRating(50);
+
+            byte percentage = difficultyRating;
+            Assert.That(percentage, Is.EqualTo(difficultyRating.Percentage));
+        }
+
+        [Test]
+        public void implicitly_convert_from_byte_to_difficulty_rating()
+        {
+            byte percentage = 65;
+            DifficultyRating difficultyRating = percentage;
+
+            Assert.That(difficultyRating.Percentage, Is.EqualTo(percentage));
+        }
     }
 }
