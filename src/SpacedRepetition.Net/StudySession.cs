@@ -53,8 +53,7 @@ namespace SpacedRepetition.Net
             while (_enumerator.MoveNext())
             {
                 var item = _enumerator.Current;
-                var nextReview = ReviewStrategy.NextReview(item);
-                if (nextReview <= Clock.Now())
+                if (IsDue(item))
                 {
                     if (IsNewItem(item))
                     {
@@ -85,6 +84,12 @@ namespace SpacedRepetition.Net
         IEnumerator IEnumerable.GetEnumerator()
         {
             return GetEnumerator();
+        }
+
+        public bool IsDue(IReviewItem item)
+        {
+            var nextReview = ReviewStrategy.NextReview(item);
+            return nextReview <= Clock.Now();
         }
     }
 }

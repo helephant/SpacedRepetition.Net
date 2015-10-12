@@ -170,5 +170,31 @@ namespace SpacedRepetition.Net.Tests.Unit
 
             Assert.That(session.Count(x => x.ReviewDate != DateTime.MinValue), Is.EqualTo(_maxExistingCardsPerSession));
         }
+
+        [Test]
+        public void item_is_due_for_review()
+        {
+            var items = new ReviewItemListBuilder()
+                   .WithNewItems(1)
+                   .Build();
+
+            var session = new StudySession<ReviewItem>(items);
+
+            Assert.That(session.IsDue(items.First()));
+
+        }
+
+        [Test]
+        public void item_is_not_due_for_review()
+        {
+            var items = new ReviewItemListBuilder()
+                   .WithFutureItems(1)
+                   .Build();
+
+            var session = new StudySession<ReviewItem>(items);
+
+            Assert.That(session.IsDue(items.First()), Is.False);
+
+        }
     }
 }
