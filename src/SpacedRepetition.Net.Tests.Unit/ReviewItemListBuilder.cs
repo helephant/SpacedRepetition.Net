@@ -25,12 +25,8 @@ namespace SpacedRepetition.Net.Tests.Unit
 
         public ReviewItemListBuilder WithFutureItems(int count)
         {
-            var itemsToAdd = new ReviewItemBuilder()
-                .WithLastReviewDate(_now)
-                .WithDifficultyRating(DifficultyRating.Easiest)
-                .WithCorrectReviewStreak(15)
-                .Build(count);
-            _items.AddRange(itemsToAdd);
+            var futureItems = new ReviewItemBuilder().Future().Build(count);
+            _items.AddRange(futureItems);
 
             return this;
         }

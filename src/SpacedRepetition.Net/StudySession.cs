@@ -35,11 +35,13 @@ namespace SpacedRepetition.Net
             if (outcome != ReviewOutcome.Incorrect)
             {
                 item.CorrectReviewStreak++;
+                item.PreviousCorrectReview = item.ReviewDate;
                 _revisionList.Remove(item);
             }
             else
             {
                 item.CorrectReviewStreak = 0;
+                item.PreviousCorrectReview = DateTime.MinValue;
                 if(!_revisionList.Contains(item))
                     _revisionList.Add(item);
             }

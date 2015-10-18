@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using NUnit.Framework;
 using SpacedRepetition.Net.ReviewStrategies;
 
@@ -30,34 +31,59 @@ namespace SpacedRepetition.Net.Tests.Unit.ReviewStrategies
             Assert.That(nextReview, Is.EqualTo(item.ReviewDate.AddDays(6)));
         }
 
+
         [Test]
-        public void short_interval_for_difficult_cards()
+        public void n_plus_2_is_interval_days_since_last_review_times_easiness_factor()
         {
-            var easinessFactor = 1.3;
-            var timesReviewed = 3;
-            var lastReviewDate = _clock.Now().AddDays(-2);
-            var item = new ReviewItemBuilder().WithLastReviewDate(lastReviewDate).WithDifficultyRating(DifficultyRating.MostDifficult).WithCorrectReviewStreak(timesReviewed).Build();
+            var item = new ReviewItemBuilder()
+                            .WithLastReviewDate(_clock.Now().AddDays(-1))
+                            .WitPreviousReviewDate(11)
+                            .WithCorrectReviewStreak(3)
+                            .WithDifficultyRating(DifficultyRating.Easiest)
+                            .Build();
             var strategy = new SuperMemo2ReviewStrategy(_clock);
 
             var nextReview = strategy.NextReview(item);
 
-            var expectedInterval = lastReviewDate.AddDays((timesReviewed - 1) * easinessFactor);
-            Assert.That(nextReview, Is.EqualTo(expectedInterval));
+            Assert.That(nextReview, Is.EqualTo(item.ReviewDate.AddDays(25)));
+        }
+
+        [Test]
+        public void short_interval_for_difficult_cards()
+        {
+            var difficultyRating = DifficultyRating.MostDifficult;
+            var daysSinceLastReview = 11;
+            var item = new ReviewItemBuilder()
+                                .WithLastReviewDate(_clock.Now().AddDays(-1))
+                                .WitPreviousReviewDate(daysSinceLastReview)
+                                .WithDifficultyRating(difficultyRating)
+                                .WithCorrectReviewStreak(3)
+                                .Build();
+            var strategy = new SuperMemo2ReviewStrategy(_clock);
+
+            var nextReview = strategy.NextReview(item);
+
+            var expectedInterval = (daysSinceLastReview - 1) * strategy.DifficultyRatingToEasinessFactor(difficultyRating);
+            Assert.That(nextReview, Is.EqualTo(item.ReviewDate.AddDays(expectedInterval)));
         }
 
         [Test]
         public void long_interval_for_easy_cards()
         {
-            var easinessFactor = 2.5;
-            var timesReviewed = 30;
-            var lastReviewDate = _clock.Now().AddDays(-2);
-            var item = new ReviewItemBuilder().WithLastReviewDate(lastReviewDate).WithDifficultyRating(DifficultyRating.Easiest).WithCorrectReviewStreak(timesReviewed).Build();
+            var difficultyRating = DifficultyRating.Easiest;
+            var daysSincePreviousReview = 11;
+            var item = new ReviewItemBuilder()
+                                .WithLastReviewDate(_clock.Now().AddDays(-1))
+                                .WitPreviousReviewDate(daysSincePreviousReview)
+                                .WithDifficultyRating(difficultyRating)
+                                .WithCorrectReviewStreak(3)
+                                .Build();
             var strategy = new SuperMemo2ReviewStrategy(_clock);
 
             var nextReview = strategy.NextReview(item);
 
-            var expectedInterval = lastReviewDate.AddDays((timesReviewed - 1) * easinessFactor);
-            Assert.That(nextReview, Is.EqualTo(expectedInterval));
+            var expectedInterval = (daysSincePreviousReview - 1) * strategy.DifficultyRatingToEasinessFactor(difficultyRating);
+            Assert.That(nextReview, Is.EqualTo(item.ReviewDate.AddDays(expectedInterval)));
         }
 
         [Test]
@@ -118,6 +144,21 @@ namespace SpacedRepetition.Net.Tests.Unit.ReviewStrategies
 
             var expectedDifficulty = new DifficultyRating(0);
             Assert.That(actualDifficulty, Is.EqualTo(expectedDifficulty));
+        }
+
+
+        [Test, Ignore("Use this to find out when the next review should be")]
+        public void when_is_the_next_review_due()
+        {
+            var item = new ReviewItem
+            {
+                DifficultyRating = 12,
+                ReviewDate = new DateTime(2013, 09, 18),
+                CorrectReviewStreak = 8,
+            };
+            var strategy = new SuperMemo2ReviewStrategy();
+            
+            Debug.WriteLine(strategy.NextReview(item));
         }
     }
 }

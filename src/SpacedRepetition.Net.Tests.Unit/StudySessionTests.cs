@@ -24,6 +24,20 @@ namespace SpacedRepetition.Net.Tests.Unit
             Assert.That(item.CorrectReviewStreak, Is.EqualTo(correctReviewStreak + 1));
         }
 
+        [TestCase(ReviewOutcome.Perfect)]
+        [TestCase(ReviewOutcome.Hesitant)]
+        public void correct_review_outcome_sets_PreviousCorrectReview(ReviewOutcome outcome)
+        {
+            var correctReviewStreak = 3;
+            var item = new ReviewItemBuilder().Due().WithCorrectReviewStreak(correctReviewStreak).Build();
+            var reviewDate = item.ReviewDate;
+
+            var session = new StudySession<ReviewItem>(new[] { item });
+            session.Review(item, outcome);
+
+            Assert.That(item.PreviousCorrectReview, Is.EqualTo(reviewDate));
+        }
+
         [Test]
         public void incorrect_review_resets_CorrectReviewStreak()
         {
@@ -34,6 +48,18 @@ namespace SpacedRepetition.Net.Tests.Unit
             session.Review(item, ReviewOutcome.Incorrect);
 
             Assert.That(item.CorrectReviewStreak, Is.EqualTo(0));
+        }
+
+        [Test]
+        public void incorrect_review_resets_PreviousReviewDate()
+        {
+            var correctReviewStreak = 3;
+            var item = new ReviewItemBuilder().Due().WithCorrectReviewStreak(correctReviewStreak).Build();
+
+            var session = new StudySession<ReviewItem>(new[] { item });
+            session.Review(item, ReviewOutcome.Incorrect);
+
+            Assert.That(item.PreviousCorrectReview, Is.EqualTo(DateTime.MinValue));
         }
 
         [TestCase(ReviewOutcome.Perfect)]

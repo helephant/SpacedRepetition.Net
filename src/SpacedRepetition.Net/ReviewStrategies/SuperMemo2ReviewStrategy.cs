@@ -27,7 +27,9 @@ namespace SpacedRepetition.Net.ReviewStrategies
                 return item.ReviewDate.AddDays(6);
 
             var easinessFactor = DifficultyRatingToEasinessFactor(item.DifficultyRating.Percentage);
-            return item.ReviewDate.AddDays((item.CorrectReviewStreak - 1)*easinessFactor);
+            var daysSincePreviousReview = (item.ReviewDate - item.PreviousCorrectReview).Days;
+            var daysUntilNextReview = (daysSincePreviousReview - 1) * easinessFactor;
+            return item.ReviewDate.AddDays(daysUntilNextReview);
         }
 
         public DifficultyRating AdjustDifficulty(IReviewItem item, ReviewOutcome outcome)
@@ -51,13 +53,13 @@ namespace SpacedRepetition.Net.ReviewStrategies
             return new DifficultyRating(newDifficultyRating);
         }
 
-        private double DifficultyRatingToEasinessFactor(int difficultyRating)
+        public double DifficultyRatingToEasinessFactor(int difficultyRating)
         {
             // using a linear equation - y = mx + b
             return (-0.012 * difficultyRating) + 2.5;
         }
 
-        private int EasinessFactorToDifficultyRating(double easinessFactor)
+        public int EasinessFactorToDifficultyRating(double easinessFactor)
         {
             // using a linear equation - x = (y - b)/m
             return (int)((easinessFactor - 2.5) / -0.012);

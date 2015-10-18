@@ -6,6 +6,7 @@ namespace SpacedRepetition.Net
     {
         public int CorrectReviewStreak { get; set; }
         public DateTime ReviewDate { get; set; }
+        public DateTime PreviousCorrectReview { get; set; }
         public DifficultyRating DifficultyRating { get; set; }
 
         public ReviewItem Clone()
@@ -14,7 +15,8 @@ namespace SpacedRepetition.Net
             {
                 DifficultyRating = DifficultyRating,
                 ReviewDate = ReviewDate,
-                CorrectReviewStreak = CorrectReviewStreak
+                PreviousCorrectReview = PreviousCorrectReview,
+                CorrectReviewStreak = CorrectReviewStreak,
             };
         }
     }
