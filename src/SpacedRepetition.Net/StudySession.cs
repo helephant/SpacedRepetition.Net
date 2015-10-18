@@ -6,7 +6,7 @@ using SpacedRepetition.Net.ReviewStrategies;
 namespace SpacedRepetition.Net
 {
     public class StudySession<T>  : IEnumerable<T> 
-        where T : IReviewItem
+        where T : IReviewItem, new()
     {
         private readonly IEnumerator<T> _enumerator;
         private readonly List<T> _revisionList = new List<T>(); 
@@ -30,24 +30,31 @@ namespace SpacedRepetition.Net
             MaxExistingCards = 100;
         }
 
-        public void Review(T item, ReviewOutcome outcome)
+        public T Review(T item, ReviewOutcome outcome)
         {
+            _revisionList.Remove(item);
+
+            var nextReview = new T();
+
             if (outcome != ReviewOutcome.Incorrect)
             {
-                item.CorrectReviewStreak++;
-                item.PreviousCorrectReview = item.ReviewDate;
-                _revisionList.Remove(item);
+                nextReview.CorrectReviewStreak = item.CorrectReviewStreak+1;
+                nextReview.PreviousCorrectReview = item.ReviewDate;
+                
             }
             else
             {
-                item.CorrectReviewStreak = 0;
-                item.PreviousCorrectReview = DateTime.MinValue;
-                if(!_revisionList.Contains(item))
-                    _revisionList.Add(item);
+                nextReview.CorrectReviewStreak = 0;
+                nextReview.PreviousCorrectReview = DateTime.MinValue;
+                
+                _revisionList.Add(nextReview);
             }
 
-            item.ReviewDate = Clock.Now();
-            item.DifficultyRating = ReviewStrategy.AdjustDifficulty(item, outcome);
+            nextReview.ReviewDate = Clock.Now();
+            nextReview.DifficultyRating = ReviewStrategy.AdjustDifficulty(item, outcome);
+            nextReview.ReviewOutcome = outcome;
+            
+            return nextReview;
         }
 
         public IEnumerator<T> GetEnumerator()

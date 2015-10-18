@@ -19,9 +19,9 @@ namespace SpacedRepetition.Net.Tests.Unit
             var item = new ReviewItemBuilder().Due().WithCorrectReviewStreak(correctReviewStreak).Build();
 
             var session = new StudySession<ReviewItem>(new[] { item });
-            session.Review(item, outcome);
+            var review = session.Review(item, outcome);
 
-            Assert.That(item.CorrectReviewStreak, Is.EqualTo(correctReviewStreak + 1));
+            Assert.That(review.CorrectReviewStreak, Is.EqualTo(correctReviewStreak + 1));
         }
 
         [TestCase(ReviewOutcome.Perfect)]
@@ -33,9 +33,9 @@ namespace SpacedRepetition.Net.Tests.Unit
             var reviewDate = item.ReviewDate;
 
             var session = new StudySession<ReviewItem>(new[] { item });
-            session.Review(item, outcome);
+            var review = session.Review(item, outcome);
 
-            Assert.That(item.PreviousCorrectReview, Is.EqualTo(reviewDate));
+            Assert.That(review.PreviousCorrectReview, Is.EqualTo(reviewDate));
         }
 
         [Test]
@@ -45,9 +45,9 @@ namespace SpacedRepetition.Net.Tests.Unit
             var item = new ReviewItemBuilder().Due().WithCorrectReviewStreak(correctReviewStreak).Build();
 
             var session = new StudySession<ReviewItem>(new[] { item });
-            session.Review(item, ReviewOutcome.Incorrect);
+            var review = session.Review(item, ReviewOutcome.Incorrect);
 
-            Assert.That(item.CorrectReviewStreak, Is.EqualTo(0));
+            Assert.That(review.CorrectReviewStreak, Is.EqualTo(0));
         }
 
         [Test]
@@ -57,9 +57,9 @@ namespace SpacedRepetition.Net.Tests.Unit
             var item = new ReviewItemBuilder().Due().WithCorrectReviewStreak(correctReviewStreak).Build();
 
             var session = new StudySession<ReviewItem>(new[] { item });
-            session.Review(item, ReviewOutcome.Incorrect);
+            var review = session.Review(item, ReviewOutcome.Incorrect);
 
-            Assert.That(item.PreviousCorrectReview, Is.EqualTo(DateTime.MinValue));
+            Assert.That(review.PreviousCorrectReview, Is.EqualTo(DateTime.MinValue));
         }
 
         [TestCase(ReviewOutcome.Perfect)]
@@ -70,9 +70,22 @@ namespace SpacedRepetition.Net.Tests.Unit
             var item = new ReviewItemBuilder().Due().Build();
 
             var session = new StudySession<ReviewItem>(new[] {item}) {Clock = _clock};
-            session.Review(item, outcome);
+            var review = session.Review(item, outcome);
 
-            Assert.That(item.ReviewDate, Is.EqualTo(_clock.Now()));
+            Assert.That(review.ReviewDate, Is.EqualTo(_clock.Now()));
+        }
+
+        [TestCase(ReviewOutcome.Perfect)]
+        [TestCase(ReviewOutcome.Hesitant)]
+        [TestCase(ReviewOutcome.Incorrect)]
+        public void reviewing_updates_ReviewOutcome(ReviewOutcome outcome)
+        {
+            var item = new ReviewItemBuilder().Due().Build();
+
+            var session = new StudySession<ReviewItem>(new[] { item }) { Clock = _clock };
+            var review = session.Review(item, outcome);
+
+            Assert.That(review.ReviewOutcome, Is.EqualTo(outcome));
         }
 
         [TestCase(ReviewOutcome.Perfect)]
@@ -83,9 +96,9 @@ namespace SpacedRepetition.Net.Tests.Unit
             var item = new ReviewItemBuilder().Due().WithDifficultyRating(DifficultyRating.MostDifficult).Build();
 
             var session = new StudySession<ReviewItem>(new[] { item }) { ReviewStrategy = new SimpleReviewStrategy() };
-            session.Review(item, outcome);
+            var review = session.Review(item, outcome);
 
-            Assert.That(item.DifficultyRating, Is.EqualTo(DifficultyRating.Easiest));
+            Assert.That(review.DifficultyRating, Is.EqualTo(DifficultyRating.Easiest));
         }
 
         [TestCase(ReviewOutcome.Perfect)]
@@ -112,9 +125,9 @@ namespace SpacedRepetition.Net.Tests.Unit
             var session = new StudySession<ReviewItem>(items);
 
             var item = session.First();
-            session.Review(item, ReviewOutcome.Incorrect);
+            var review = session.Review(item, ReviewOutcome.Incorrect);
 
-            Assert.That(session.First(), Is.EqualTo(item));
+            Assert.That(session.First(), Is.EqualTo(review));
         }
 
         [Test]
