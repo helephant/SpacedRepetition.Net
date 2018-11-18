@@ -11,3 +11,10 @@ There are a number of different SRS algorithms of varying complexity. SpacedRepe
 - SuperMemo2: http://www.supermemo.com/english/ol/sm2.htm
 
 It is also possible to implement your own. 
+
+## Using the library
+
+There is  a [nuget package](https://github.com/helephant/SpacedRepetition.Net) for .NET, so you can install it into your project using the following command:
+```
+Install-Package SpacedRepetition.Net
+```

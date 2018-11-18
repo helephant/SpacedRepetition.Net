@@ -1,1 +1,1 @@
-dotnet pack .\src\SpacedRepetition.Net\SpacedRepetition.Net.csproj --output ../../build/current --include-symbols /p:Version=1.0.1
+dotnet pack .\src\SpacedRepetition.Net\SpacedRepetition.Net.csproj --output ../../build/current --include-symbols /p:Version=1.0.2
