@@ -8,7 +8,6 @@ namespace SpacedRepetition.Net
         public DateTime ReviewDate { get; set; }
         public DateTime PreviousCorrectReview { get; set; }
         public DifficultyRating DifficultyRating { get; set; }
-        public ReviewOutcome ReviewOutcome { get; set; }
 
         public ReviewItem Clone()
         {
@@ -18,7 +17,6 @@ namespace SpacedRepetition.Net
                 ReviewDate = ReviewDate,
                 PreviousCorrectReview = PreviousCorrectReview,
                 CorrectReviewStreak = CorrectReviewStreak,
-                ReviewOutcome = ReviewOutcome,
             };
         }
     }

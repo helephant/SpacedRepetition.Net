@@ -8,6 +8,5 @@ namespace SpacedRepetition.Net
         DateTime ReviewDate { get; set; }
         DateTime PreviousCorrectReview { get; set; }
         DifficultyRating DifficultyRating { get; set; }
-        ReviewOutcome ReviewOutcome { get; set; }
     }
 }

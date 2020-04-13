@@ -52,7 +52,6 @@ namespace SpacedRepetition.Net
 
             nextReview.ReviewDate = Clock.Now();
             nextReview.DifficultyRating = ReviewStrategy.AdjustDifficulty(item, outcome);
-            nextReview.ReviewOutcome = outcome;
             
             return nextReview;
         }

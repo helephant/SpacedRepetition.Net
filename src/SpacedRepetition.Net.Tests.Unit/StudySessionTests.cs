@@ -78,19 +78,6 @@ namespace SpacedRepetition.Net.Tests.Unit
         [TestCase(ReviewOutcome.Perfect)]
         [TestCase(ReviewOutcome.Hesitant)]
         [TestCase(ReviewOutcome.Incorrect)]
-        public void reviewing_updates_ReviewOutcome(ReviewOutcome outcome)
-        {
-            var item = new ReviewItemBuilder().Due().Build();
-
-            var session = new StudySession<ReviewItem>(new[] { item }) { Clock = _clock };
-            var review = session.Review(item, outcome);
-
-            Assert.That(review.ReviewOutcome, Is.EqualTo(outcome));
-        }
-
-        [TestCase(ReviewOutcome.Perfect)]
-        [TestCase(ReviewOutcome.Hesitant)]
-        [TestCase(ReviewOutcome.Incorrect)]
         public void reviewing_updates_DifficultyRating_based_on_review_strategy(ReviewOutcome outcome)
         {
             var item = new ReviewItemBuilder().Due().WithDifficultyRating(DifficultyRating.MostDifficult).Build();
